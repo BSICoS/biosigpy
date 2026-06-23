@@ -1,0 +1,22 @@
+{
+  "$schema": "https://raw.githubusercontent.com/BSICoS/biosiglib/1f0a99943704e91f1102df3f50e28904e1cee43d/schemas/implementation-manifest.schema.json",
+  "implementation": {
+    "name": "biosigpy",
+    "language": "Python",
+    "repository": "https://github.com/BSICoS/biosigpy"
+  },
+  "biosiglib": {
+    "repository": "https://github.com/BSICoS/biosiglib",
+    "commit": "1f0a99943704e91f1102df3f50e28904e1cee43d"
+  },
+  "specifications": {
+    "hrv.tdmetrics": {
+      "status": "conformant",
+      "entry_point": "biosigpy.hrv.tdmetrics.tdmetrics"
+    },
+    "ecg.pantompkins": {
+      "status": "conformant",
+      "entry_point": "biosigpy.ecg.pantompkins.pantompkins"
+    }
+  }
+}
