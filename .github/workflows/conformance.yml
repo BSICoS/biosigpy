@@ -19,12 +19,28 @@ jobs:
         with:
           path: biosigpy
 
+      - name: Read Biosiglib pin
+        id: biosiglib-pin
+        working-directory: biosigpy
+        run: |
+          python - <<'PY' >> "$GITHUB_OUTPUT"
+          import json
+          from pathlib import Path
+
+          manifest = json.loads(Path("conformance.json").read_text(encoding="utf-8"))
+          commit = manifest["biosiglib"]["commit"]
+          release = manifest["biosiglib"].get("release", "")
+          print(f"commit={commit}")
+          print(f"release={release}")
+          PY
+
       - name: Check out pinned Biosiglib
         uses: actions/checkout@v4
         with:
           repository: BSICoS/biosiglib
-          ref: 1f0a99943704e91f1102df3f50e28904e1cee43d
+          ref: ${{ steps.biosiglib-pin.outputs.commit }}
           path: biosiglib
+          persist-credentials: false
 
       - name: Set up Python
         uses: actions/setup-python@v5
