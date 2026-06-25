@@ -121,7 +121,7 @@ The Python code and visualisation libraries may differ from MATLAB, but the exam
 
 ## Conformance manifest
 
-Biosigpy will include a machine-readable conformance manifest identifying:
+Biosigpy includes `conformance.json`, a machine-readable conformance manifest identifying:
 
 * The Biosigpy version.
 * The Biosiglib release and commit used for validation.
