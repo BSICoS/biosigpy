@@ -1,17 +1,19 @@
-"""Time-domain variability metrics from canonical event times."""
+"""Time-domain variability metrics from interval series."""
 
 import numpy as np
 from numpy.typing import ArrayLike
 
 
-def tdmetrics(tk: ArrayLike) -> dict[str, float]:
+def tdmetrics(dtk: ArrayLike) -> dict[str, float]:
     """Compute time-domain beat or pulse variability metrics.
 
     Parameters
     ----------
-    tk
-        Strictly increasing beat or pulse event times in seconds. One-dimensional
-        arrays and row or column vectors are accepted.
+    dtk
+        Beat or pulse interval series in seconds. The input must be a
+        one-dimensional numeric vector. ``NaN`` values are allowed as missing
+        interval markers and are omitted before computing the metrics. Infinite,
+        zero, and negative values are rejected.
 
     Returns
     -------
@@ -19,22 +21,22 @@ def tdmetrics(tk: ArrayLike) -> dict[str, float]:
         ``mhr``, ``sdnn``, ``sdsd``, ``rmssd``, and ``pnn50``.
     """
 
-    event_times = _real_vector(tk, name="tk")
-    if event_times.size == 0:
-        raise ValueError("tk must not be empty")
-    if not np.all(np.isfinite(event_times)):
-        raise ValueError("tk must contain only finite values")
-    if np.any(event_times < 0):
-        raise ValueError("tk values must be non-negative")
+    intervals = _real_vector(dtk, name="dtk")
+    if intervals.size == 0:
+        raise ValueError("dtk must not be empty")
+    if np.any(np.isinf(intervals)):
+        raise ValueError("dtk must not contain infinite values")
+    if np.any(intervals[~np.isnan(intervals)] <= 0):
+        raise ValueError("dtk values must be positive or NaN")
 
-    dtk = np.diff(event_times)
-    if np.any(dtk <= 0):
-        raise ValueError("tk must be strictly increasing")
+    valid_intervals = intervals[~np.isnan(intervals)]
+    if valid_intervals.size < 2:
+        raise ValueError("dtk must contain at least two valid intervals")
 
-    successive_interval_differences = np.diff(dtk)
+    successive_interval_differences = np.diff(valid_intervals)
     return {
-        "mhr": float(60.0 / np.mean(dtk)),
-        "sdnn": float(1000.0 * np.std(dtk, ddof=1)),
+        "mhr": float(60.0 / np.mean(valid_intervals)),
+        "sdnn": float(1000.0 * np.std(valid_intervals, ddof=1)),
         "sdsd": float(
             1000.0 * np.std(successive_interval_differences, ddof=1)
         ),
@@ -58,11 +60,7 @@ def _real_vector(values: ArrayLike, *, name: str) -> np.ndarray:
     except (TypeError, ValueError) as error:
         raise TypeError(f"{name} must be numeric") from error
 
-    if array.ndim == 1:
-        pass
-    elif array.ndim == 2 and 1 in array.shape:
-        array = array.reshape(-1)
-    else:
+    if array.ndim != 1:
         raise ValueError(f"{name} must be a vector")
 
     if not np.issubdtype(array.dtype, np.number) or np.issubdtype(
