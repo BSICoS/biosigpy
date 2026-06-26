@@ -27,11 +27,6 @@ jobs:
       BIOSIGLIB_ROOT: ${{ github.workspace }}/biosiglib
 
     steps:
-      - name: Check out Biosigpy
-        uses: actions/checkout@v4
-        with:
-          path: biosigpy
-
       - name: Validate propagation inputs
         id: propagation-inputs
         shell: bash
@@ -50,6 +45,11 @@ jobs:
           echo "BIOSIGLIB_RELEASE_SEMVER=$release_semver" >> "$GITHUB_ENV"
           echo "biosiglib_commit=$normalized_commit" >> "$GITHUB_OUTPUT"
           echo "biosiglib_release_semver=$release_semver" >> "$GITHUB_OUTPUT"
+
+      - name: Check out Biosigpy
+        uses: actions/checkout@v4
+        with:
+          path: biosigpy
 
       - name: Check out Biosiglib
         uses: actions/checkout@v4
@@ -73,21 +73,6 @@ jobs:
             echo "Release $BIOSIGLIB_RELEASE points to $release_commit, not $BIOSIGLIB_COMMIT" >&2
             exit 1
           fi
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-          cache: pip
-          cache-dependency-path: |
-            biosigpy/requirements-dev.txt
-            biosiglib/requirements-dev.txt
-
-      - name: Install development dependencies
-        run: |
-          python -m pip install --upgrade pip
-          python -m pip install -r biosigpy/requirements-dev.txt
-          python -m pip install -r biosiglib/requirements-dev.txt
 
       - name: Update conformance manifest
         id: manifest-update
@@ -124,18 +109,6 @@ jobs:
           PY
           git diff -- conformance.json
 
-      - name: Validate conformance manifest
-        working-directory: biosigpy
-        run: python ../biosiglib/tools/validate_specs.py --manifest conformance.json
-
-      - name: Run full Python test suite
-        working-directory: biosigpy
-        run: python -m pytest
-
-      - name: Check whitespace
-        working-directory: biosigpy
-        run: git diff --check
-
       - name: Detect manifest change
         id: manifest-change
         working-directory: biosigpy
@@ -160,10 +133,37 @@ jobs:
           base: main
           title: Propagate Biosiglib ${{ env.BIOSIGLIB_RELEASE }}
           body: |
-            Propagates a validated Biosiglib release into Biosigpy.
+            Propagates a Biosiglib release into Biosigpy.
 
             - Biosiglib release tag: `${{ env.BIOSIGLIB_RELEASE }}`
             - Biosiglib commit: `${{ steps.propagation-inputs.outputs.biosiglib_commit }}`
             - Manifest statuses: ${{ steps.manifest-update.outputs.manifest-statuses }}
-            - Validation: external manifest validation, full `pytest` suite, and `git diff --check` passed.
+            - Validation status is reported by this workflow run and the pull request checks.
             - Shared fixtures and conformance cases were consumed from Biosiglib and were not copied into Biosigpy.
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: |
+            biosigpy/requirements-dev.txt
+            biosiglib/requirements-dev.txt
+
+      - name: Install development dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r biosigpy/requirements-dev.txt
+          python -m pip install -r biosiglib/requirements-dev.txt
+
+      - name: Validate conformance manifest
+        working-directory: biosigpy
+        run: python ../biosiglib/tools/validate_specs.py --manifest conformance.json
+
+      - name: Run full Python test suite
+        working-directory: biosigpy
+        run: python -m pytest
+
+      - name: Check whitespace
+        working-directory: biosigpy
+        run: git diff --check
