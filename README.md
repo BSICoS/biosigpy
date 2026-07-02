@@ -6,12 +6,7 @@ Biosigpy provides Python implementations of the language-independent algorithms 
 
 ## Status
 
-Biosigpy is in its initial development stage and is not yet available as a stable package. The current pilot algorithms are:
-
-- `hrv.tdmetrics`
-- `ecg.pantompkins`
-
-The rest of the public Biosigmat API will be incorporated progressively after the pilot architecture has been validated.
+Biosigpy is in its initial development stage and is not yet available as a stable package.
 
 ## Installation for development
 
