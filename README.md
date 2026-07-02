@@ -18,12 +18,18 @@ cd biosigpy
 python -m venv .venv
 source .venv/bin/activate
 python -m pip install --upgrade pip
-python -m pip install numpy scipy pytest
+python -m pip install -e ".[examples]"
 ```
 
 On Windows PowerShell, use `.venv\Scripts\Activate.ps1` instead of `source .venv/bin/activate`.
 
-Until packaging is finalized, run scripts with `PYTHONPATH=src` from the repository root.
+For development and tests, install the development extras instead:
+
+```bash
+python -m pip install -e ".[dev]"
+```
+
+Use `.[examples]` when you only want to run the examples; use `.[dev]` when contributing to Biosigpy or running the test suite.
 
 ## Basic usage
 
@@ -42,8 +48,16 @@ print(metrics["rmssd"])
 More examples are available under [`examples/`](examples/):
 
 ```bash
-PYTHONPATH=src python examples/hrv/tdmetrics_example.py
-PYTHONPATH=src python examples/ecg/pantompkins_example.py
+python examples/hrv/tdmetrics_example.py
+python examples/ecg/pantompkins_example.py
+```
+
+Examples that generate figures open an interactive Matplotlib window when an
+interactive backend is available. In non-interactive environments, pass
+`--save-figure PATH` to save the plot instead. To check the active backend:
+
+```bash
+python -c "import matplotlib; print(matplotlib.get_backend())"
 ```
 
 ## Documentation

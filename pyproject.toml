@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "biosigpy"
+version = "0.0.0"
+description = "Python implementation of the Biosiglib specifications for biomedical signal processing."
+readme = "README.md"
+requires-python = ">=3.10"
+license = "GPL-3.0-only"
+license-files = ["LICENSE"]
+dependencies = [
+    "numpy",
+    "scipy",
+]
+
+[project.optional-dependencies]
+examples = [
+    "matplotlib",
+]
+dev = [
+    "jsonschema",
+    "matplotlib",
+    "pytest",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
