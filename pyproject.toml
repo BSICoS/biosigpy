@@ -18,10 +18,12 @@ dependencies = [
 [project.optional-dependencies]
 examples = [
     "matplotlib",
+    "PyQt6",
 ]
 dev = [
     "jsonschema",
     "matplotlib",
+    "PyQt6",
     "pytest",
 ]
 

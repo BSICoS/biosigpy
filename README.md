@@ -60,6 +60,10 @@ interactive backend is available. In non-interactive environments, pass
 python -c "import matplotlib; print(matplotlib.get_backend())"
 ```
 
+In VS Code, open any example file, use **Run and Debug**, and select
+`Biosigpy: current file with QtAgg`. The launch configuration runs the
+currently open file because it uses `"program": "${file}"`.
+
 ## Documentation
 
 The Biosigpy documentation site is being developed. The planned location is [https://bsicos.github.io/biosigpy/](https://bsicos.github.io/biosigpy/).

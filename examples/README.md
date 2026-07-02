@@ -29,6 +29,10 @@ interactive backend is available. In non-interactive or headless environments,
 pass `--save-figure PATH` to save the plot instead:
 
 ```bash
+MPLBACKEND=QtAgg python examples/ecg/pantompkins_example.py
+```
+
+```bash
 MPLBACKEND=Agg python examples/ecg/pantompkins_example.py --save-figure /tmp/pantompkins_example.png
 ```
 
@@ -39,6 +43,10 @@ $env:MPLBACKEND = "Agg"
 python examples\ecg\pantompkins_example.py --save-figure "$env:TEMP\pantompkins_example.png"
 Remove-Item Env:\MPLBACKEND
 ```
+
+For VS Code, install the example dependencies, open any example file, use
+**Run and Debug**, and select `Biosigpy: current file with QtAgg`. The launch
+configuration runs the currently open file because it uses `"program": "${file}"`.
 
 To check the active Matplotlib backend:
 
