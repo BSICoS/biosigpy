@@ -18,7 +18,7 @@ cd biosigpy
 python -m venv .venv
 source .venv/bin/activate
 python -m pip install --upgrade pip
-python -m pip install numpy scipy matplotlib pytest
+python -m pip install numpy scipy pytest
 ```
 
 On Windows PowerShell, use `.venv\Scripts\Activate.ps1` instead of `source .venv/bin/activate`.
