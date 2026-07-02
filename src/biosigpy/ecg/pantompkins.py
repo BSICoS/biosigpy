@@ -1,4 +1,4 @@
-"""Pan-Tompkins-style ECG R-peak detection."""
+"""Pan-Tompkins-style ECG R-wave detection."""
 
 import numpy as np
 from numpy.typing import ArrayLike
@@ -16,7 +16,7 @@ def pantompkins(
 ) -> dict[str, np.ndarray]:
     """Detect ECG R waves and return the canonical processing outputs.
 
-    R-peak times are expressed in seconds. Internal peak indices are zero-based.
+    R-wave times are expressed in seconds. Internal peak indices are zero-based.
     """
 
     ecg_vector = _ecg_vector(ecg)
@@ -61,7 +61,7 @@ def pantompkins(
     peak_indices = peak_indices[peak_indices >= filter_edge_margin]
 
     return {
-        "r_peak_times": peak_indices.astype(np.float64) / fs,
+        "r_wave_times": peak_indices.astype(np.float64) / fs,
         "ecg_filtered": np.asarray(ecg_filtered, dtype=np.float64),
         "decg": np.asarray(decg, dtype=np.float64),
         "decg_envelope": np.asarray(decg_envelope, dtype=np.float64),
