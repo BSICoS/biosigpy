@@ -22,14 +22,14 @@ EXPECTED_ERROR_CASES = [
 
 
 def test_positive_conformance() -> None:
-    case_definition = load_case("ecg.pantompkins.edr_signals_001")
+    case_definition = load_case("ecg.pantompkins.medicom_mtd_r_wave_times")
     ecg = load_input(case_definition, "ecg")
     sampling_frequency = load_input(case_definition, "sampling_frequency")
 
     outputs = pantompkins(ecg, sampling_frequency)
 
     assert set(outputs) == {
-        "r_peak_times",
+        "r_wave_times",
         "ecg_filtered",
         "decg",
         "decg_envelope",
