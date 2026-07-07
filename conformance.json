@@ -1,5 +1,5 @@
 {
-  "$schema": "https://raw.githubusercontent.com/BSICoS/biosiglib/069ca110acbfea8579e2cb83f336a3b2ab53804b/schemas/implementation-manifest.schema.json",
+  "$schema": "https://raw.githubusercontent.com/BSICoS/biosiglib/f7f3ff720cac7ac87fcf45f9b362d29c18fcf777/schemas/implementation-manifest.schema.json",
   "implementation": {
     "name": "biosigpy",
     "language": "Python",
@@ -7,8 +7,8 @@
   },
   "biosiglib": {
     "repository": "https://github.com/BSICoS/biosiglib",
-    "commit": "069ca110acbfea8579e2cb83f336a3b2ab53804b",
-    "release": "0.3.0"
+    "commit": "f7f3ff720cac7ac87fcf45f9b362d29c18fcf777",
+    "release": "0.4.0"
   },
   "specifications": {
     "hrv.tdmetrics": {
