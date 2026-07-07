@@ -13,8 +13,8 @@ from conformance import (
 
 
 VALID_CASES = [
-    "hrv.tdmetrics.valid_dtk_001",
-    "hrv.tdmetrics.valid_dtk_with_nan_001",
+    "hrv.tdmetrics.valid_dtk",
+    "hrv.tdmetrics.valid_dtk_with_nan",
 ]
 
 EXPECTED_ERROR_CASES = [
