@@ -1,5 +1,5 @@
 {
-  "$schema": "https://raw.githubusercontent.com/BSICoS/biosiglib/37c5f715d6887de12ea74919c9ecc5c0eac5a097/schemas/implementation-manifest.schema.json",
+  "$schema": "https://raw.githubusercontent.com/BSICoS/biosiglib/9844bd742d6c375f472dceb16adaae97e700509b/schemas/implementation-manifest.schema.json",
   "implementation": {
     "name": "biosigpy",
     "language": "Python",
@@ -7,8 +7,8 @@
   },
   "biosiglib": {
     "repository": "https://github.com/BSICoS/biosiglib",
-    "commit": "37c5f715d6887de12ea74919c9ecc5c0eac5a097",
-    "release": "0.5.1"
+    "commit": "9844bd742d6c375f472dceb16adaae97e700509b",
+    "release": "0.5.5"
   },
   "specifications": {
     "hrv.tdmetrics": {
@@ -18,6 +18,10 @@
     "ecg.pantompkins": {
       "status": "conformant",
       "entry_point": "biosigpy.ecg.pantompkins.pantompkins"
+    },
+    "tools.medfilt_threshold": {
+      "status": "conformant",
+      "entry_point": "biosigpy.tools.medfilt_threshold.medfilt_threshold"
     }
   }
 }
