@@ -18,9 +18,57 @@ def pantompkins(
     minimum_peak_distance: float = 0.5,
     snap_to_peak_window_size: float = 20.0,
 ) -> dict[str, np.ndarray]:
-    """Detect ECG R waves and return the canonical processing outputs.
+    """Detect ECG R waves with the Biosiglib Pan-Tompkins workflow.
 
-    R-wave times are expressed in seconds. Internal peak indices are zero-based.
+    Parameters
+    ----------
+    ecg : array_like
+        One-dimensional real numeric ECG signal with at least two samples.
+        Infinite values are invalid.
+    sampling_frequency : float
+        Positive sampling frequency in Hz.
+    bandpass_frequency : array_like, optional
+        Two-element bandpass frequency vector in Hz. Values must be positive,
+        strictly increasing, and inside the Nyquist range.
+    integration_window_size : float, optional
+        Moving-integration window length in seconds.
+    minimum_peak_distance : float, optional
+        Minimum distance between envelope peaks in seconds.
+    snap_to_peak_window_size : float, optional
+        Search radius in samples used when refining detections to local ECG
+        maxima.
+
+    Returns
+    -------
+    dict[str, numpy.ndarray]
+        Dictionary with ``r_wave_times`` in seconds, ``ecg_filtered``,
+        ``decg``, and ``decg_envelope``.
+
+    Raises
+    ------
+    TypeError
+        If numeric inputs are not real numeric data.
+    ValueError
+        If inputs are outside the accepted shape, range, or positivity
+        constraints.
+
+    Notes
+    -----
+    This function follows the Biosiglib ``ecg.pantompkins`` specification. It
+    returns R-wave times and intermediate processing signals. Peak refinement
+    uses :func:`biosigpy.tools.snap_to_peak.snap_to_peak`, and derivative
+    filter design uses :func:`biosigpy.tools.lpd_filter.lpd_filter`.
+
+    Examples
+    --------
+    >>> import numpy as np
+    >>> from biosigpy.ecg import pantompkins
+    >>> fs = 256.0
+    >>> time = np.arange(0.0, 2.0, 1.0 / fs)
+    >>> ecg = np.sin(2.0 * np.pi * 1.2 * time)
+    >>> outputs = pantompkins(ecg, fs)
+    >>> "r_wave_times" in outputs
+    True
     """
 
     ecg_vector = _ecg_vector(ecg)

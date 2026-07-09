@@ -66,15 +66,33 @@ currently open file because it uses `"program": "${file}"`.
 
 ## Documentation
 
-The Biosigpy documentation site is being developed. The planned location is [https://bsicos.github.io/biosigpy/](https://bsicos.github.io/biosigpy/).
+The Biosigpy documentation site is available at [https://bsicos.github.io/biosigpy/](https://bsicos.github.io/biosigpy/).
 
 Language-independent algorithm behavior is documented centrally in [Biosiglib](https://github.com/BSICoS/biosiglib). Biosigpy documentation should focus on Python installation, API usage, executable examples, and Python-specific implementation notes.
+
+To build the documentation locally:
+
+```bash
+python -m pip install -e ".[docs]"
+mkdocs serve
+mkdocs build --strict
+```
 
 ## Conformance
 
 Biosigpy includes `conformance.json`, a machine-readable manifest that pins the exact Biosiglib revision used for shared conformance tests.
 
 Shared conformance cases define the scientific and computational behavior that must remain aligned across implementations. Python-specific tests may additionally cover Python API behavior, data types, exceptions, packaging, and internal implementation details.
+
+Currently conformant APIs:
+
+- `biosigpy.hrv.tdmetrics.tdmetrics`
+- `biosigpy.ecg.pantompkins.pantompkins`
+- `biosigpy.tools.medfilt_threshold.medfilt_threshold`
+- `biosigpy.tools.snap_to_peak.snap_to_peak`
+- `biosigpy.tools.nan_filter.nan_filter`
+- `biosigpy.tools.nan_filtfilt.nan_filtfilt`
+- `biosigpy.tools.lpd_filter.lpd_filter`
 
 ## Contributing
 
