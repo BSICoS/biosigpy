@@ -18,6 +18,10 @@
     "ecg.pantompkins": {
       "status": "conformant",
       "entry_point": "biosigpy.ecg.pantompkins.pantompkins"
+    },
+    "tools.medfilt_threshold": {
+      "status": "conformant",
+      "entry_point": "biosigpy.tools.medfilt_threshold.medfilt_threshold"
     }
   }
 }
