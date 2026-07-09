@@ -28,26 +28,27 @@ def snap_to_peak(
         raise ValueError("detections must be between 1 and len(ecg)")
 
     window_size = as_positive_real_scalar(window_size, name="window_size")
-    effective_window_size = _round_positive_half_up(window_size)
+    window_size = _round_positive_half_up(window_size)
 
-    refined = np.empty(detections.size, dtype=np.float64)
-    for index, detection in enumerate(detections):
-        if np.isnan(detection):
-            refined[index] = np.nan
+    refined_detections = np.empty(detections.size, dtype=np.float64)
+    for detection_index, current_detection in enumerate(detections):
+        if np.isnan(current_detection):
+            refined_detections[detection_index] = np.nan
             continue
 
-        sample_index = _round_positive_half_up(detection) - 1
-        if np.isnan(ecg[sample_index]):
-            refined[index] = np.nan
+        current_detection = _round_positive_half_up(current_detection) - 1
+        if np.isnan(ecg[current_detection]):
+            refined_detections[detection_index] = np.nan
             continue
 
-        segment_start, segment_end = _finite_segment_bounds(ecg, sample_index)
-        window_start = max(segment_start, sample_index - effective_window_size)
-        window_end = min(segment_end, sample_index + effective_window_size)
-        window = ecg[window_start : window_end + 1]
-        refined[index] = window_start + int(np.argmax(window)) + 1
+        segment_start, segment_end = _finite_segment_bounds(ecg, current_detection)
+        window_start = max(segment_start, current_detection - window_size)
+        window_end = min(segment_end, current_detection + window_size)
+        window_signal = ecg[window_start : window_end + 1]
+        local_index = int(np.argmax(window_signal))
+        refined_detections[detection_index] = window_start + local_index + 1
 
-    return refined
+    return refined_detections
 
 
 def _round_positive_half_up(value: float) -> int:
