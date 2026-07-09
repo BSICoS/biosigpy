@@ -68,6 +68,18 @@ def test_filters_nan_refined_detections_before_r_wave_times(
         assert window_size == 3.0
         return np.array([np.nan, 5.0])
 
+    def fake_lpd_filter(
+        sampling_frequency: float,
+        stop_frequency: float,
+        pass_frequency: float | None = None,
+        order: int | None = None,
+    ) -> tuple[np.ndarray, float]:
+        assert sampling_frequency == 40.0
+        assert stop_frequency == 12.0
+        assert pass_frequency is None
+        assert order == 4
+        return np.array([1.0]), 0.0
+
     monkeypatch.setattr(
         PANTOMPKINS_MODULE.signal,
         "butter",
@@ -88,6 +100,7 @@ def test_filters_nan_refined_detections_before_r_wave_times(
         "find_peaks",
         lambda envelope, distance: (np.array([1, 4]), {}),
     )
+    monkeypatch.setattr(PANTOMPKINS_MODULE, "lpd_filter", fake_lpd_filter)
     monkeypatch.setattr(PANTOMPKINS_MODULE, "snap_to_peak", fake_snap_to_peak)
 
     outputs = pantompkins(

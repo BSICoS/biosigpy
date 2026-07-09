@@ -5,6 +5,7 @@ from numpy.typing import ArrayLike
 from scipy import signal
 
 from biosigpy.tools._validation import as_positive_real_scalar, as_real_vector
+from biosigpy.tools.lpd_filter import lpd_filter
 from biosigpy.tools.snap_to_peak import snap_to_peak
 
 
@@ -40,7 +41,7 @@ def pantompkins(
     )
     ecg_filtered = signal.filtfilt(b_bandpass, a_bandpass, ecg_vector)
 
-    derivative_filter = _default_derivative_filter(fs, bandpass[1])
+    derivative_filter, _ = lpd_filter(fs, bandpass[1], order=4)
     decg = signal.lfilter(derivative_filter, [1.0], ecg_filtered) ** 2
 
     window_samples = int(np.floor(fs * window_seconds + 0.5))
@@ -94,25 +95,3 @@ def _bandpass_pair(value: ArrayLike, sampling_frequency: float) -> np.ndarray:
     ):
         raise ValueError("bandpass_frequency must lie inside the Nyquist range")
     return bandpass
-
-
-def _default_derivative_filter(
-    sampling_frequency: float, stop_frequency: float
-) -> np.ndarray:
-    # Reference defaults use the same order-4 least-squares differentiator
-    # design as the shared Biosigmat oracle.
-    if sampling_frequency == 256.0 and stop_frequency == 12.0:
-        return np.array(
-            [
-                8.00635957041095,
-                4.08939515658424,
-                0.0,
-                -4.08939515658424,
-                -8.00635957041095,
-            ],
-            dtype=np.float64,
-        )
-
-    normalized_stop = stop_frequency / (sampling_frequency / 2.0)
-    scale = sampling_frequency * normalized_stop / 3.0
-    return scale * np.array([2.0, 1.0, 0.0, -1.0, -2.0]) / 5.0
