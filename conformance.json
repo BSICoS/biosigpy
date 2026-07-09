@@ -23,6 +23,14 @@
       "status": "conformant",
       "entry_point": "biosigpy.tools.medfilt_threshold.medfilt_threshold"
     },
+    "tools.nan_filter": {
+      "status": "conformant",
+      "entry_point": "biosigpy.tools.nan_filter.nan_filter"
+    },
+    "tools.nan_filtfilt": {
+      "status": "conformant",
+      "entry_point": "biosigpy.tools.nan_filtfilt.nan_filtfilt"
+    },
     "tools.snap_to_peak": {
       "status": "conformant",
       "entry_point": "biosigpy.tools.snap_to_peak.snap_to_peak"
