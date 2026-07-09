@@ -1,0 +1,8 @@
+title: Tools
+arrange:
+  - index.md
+  - medfilt-threshold.md
+  - snap-to-peak.md
+  - nan-filter.md
+  - nan-filtfilt.md
+  - lpd-filter.md

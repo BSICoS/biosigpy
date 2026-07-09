@@ -26,6 +26,13 @@ dev = [
     "PyQt6",
     "pytest",
 ]
+docs = [
+    "mkdocs-material<9.7.0",
+    "mkdocs-awesome-pages-plugin",
+    "mkdocs-minify-plugin",
+    "mkdocs-redirects<1.2.3",
+    "mkdocs-git-revision-date-localized-plugin",
+]
 
 [tool.setuptools.packages.find]
 where = ["src"]
