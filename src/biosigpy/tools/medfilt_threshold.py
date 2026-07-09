@@ -13,7 +13,48 @@ from biosigpy.tools._validation import (
 def medfilt_threshold(
     x: ArrayLike, window: int, factor: float, max_threshold: float
 ) -> np.ndarray:
-    """Compute a capped median-filtered adaptive threshold."""
+    """Compute a capped median-filtered adaptive threshold.
+
+    Parameters
+    ----------
+    x : array_like
+        One-dimensional real numeric signal with at least two samples.
+        Infinite values are invalid.
+    window : int
+        Median window length in samples. Values below 2 are invalid. Windows
+        longer than the signal are clipped to the signal length.
+    factor : float
+        Positive multiplier applied to the median-filtered signal.
+    max_threshold : float
+        Positive upper bound applied to the threshold.
+
+    Returns
+    -------
+    numpy.ndarray
+        One-dimensional threshold array with the same length as ``x``.
+
+    Raises
+    ------
+    TypeError
+        If numeric inputs are not real numeric data.
+    ValueError
+        If ``x`` is empty, has fewer than two samples, is not a vector,
+        contains infinite values, or if scalar parameters are outside their
+        accepted ranges.
+
+    Notes
+    -----
+    This function implements the Biosiglib ``tools.medfilt_threshold``
+    specification.
+
+    Examples
+    --------
+    >>> import numpy as np
+    >>> from biosigpy.tools import medfilt_threshold
+    >>> x = np.array([1.0, 1.2, 2.4, 1.1, 1.0])
+    >>> medfilt_threshold(x, window=3, factor=1.5, max_threshold=2.0).shape
+    (5,)
+    """
 
     x = as_real_vector(x, name="x")
     if x.size == 0:

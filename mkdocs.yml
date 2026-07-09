@@ -31,6 +31,17 @@ plugins:
   - git-revision-date-localized:
       type: date
       fallback_to_build_date: true
+  - mkdocstrings:
+      handlers:
+        python:
+          paths:
+            - src
+          options:
+            docstring_style: numpy
+            show_source: true
+            show_root_heading: true
+            show_signature_annotations: true
+            separate_signature: true
   - minify:
       minify_html: true
   - redirects

@@ -9,16 +9,39 @@ def tdmetrics(dtk: ArrayLike) -> dict[str, float]:
 
     Parameters
     ----------
-    dtk
+    dtk : array_like
         Beat or pulse interval series in seconds. The input must be a
-        one-dimensional numeric vector. ``NaN`` values are allowed as missing
-        interval markers and are omitted before computing the metrics. Infinite,
-        zero, and negative values are rejected.
+        one-dimensional real numeric vector. ``NaN`` values are treated as
+        missing interval markers and are omitted before computing the metrics.
+        Infinite, zero, and negative values are invalid.
 
     Returns
     -------
-    dict
-        ``mhr``, ``sdnn``, ``sdsd``, ``rmssd``, and ``pnn50``.
+    dict[str, float]
+        Dictionary containing ``mhr`` in beats/min, ``sdnn`` in ms, ``sdsd``
+        in ms, ``rmssd`` in ms, and ``pnn50`` in percent.
+
+    Raises
+    ------
+    TypeError
+        If ``dtk`` is not real numeric data.
+    ValueError
+        If ``dtk`` is empty, is not one-dimensional, contains infinite,
+        zero, or negative values, or has fewer than two finite intervals.
+
+    Notes
+    -----
+    This function implements the Biosiglib ``hrv.tdmetrics`` specification.
+    It is modality-generic and can be used with beat or pulse interval series
+    that satisfy the input contract.
+
+    Examples
+    --------
+    >>> import numpy as np
+    >>> from biosigpy.hrv import tdmetrics
+    >>> metrics = tdmetrics(np.array([0.82, 0.80, 0.84, np.nan, 0.81]))
+    >>> sorted(metrics)
+    ['mhr', 'pnn50', 'rmssd', 'sdnn', 'sdsd']
     """
 
     intervals = _real_vector(dtk, name="dtk")

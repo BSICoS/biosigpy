@@ -12,7 +12,56 @@ def lpd_filter(
     pass_frequency: float | None = None,
     order: int | None = None,
 ) -> tuple[np.ndarray, float]:
-    """Design a Biosiglib-compatible low-pass differentiator FIR filter."""
+    """Design a Biosiglib-compatible low-pass differentiator FIR filter.
+
+    Parameters
+    ----------
+    sampling_frequency : float
+        Positive sampling frequency in Hz.
+    stop_frequency : float
+        Positive stop frequency in Hz. The value must be less than the
+        Nyquist frequency.
+    pass_frequency : float or None, optional
+        Positive pass frequency in Hz. When omitted, ``stop_frequency - 0.2``
+        is used. The pass frequency must be less than ``stop_frequency``.
+    order : int or None, optional
+        Explicit positive filter order. Automatic order selection is currently
+        unsupported.
+
+    Returns
+    -------
+    tuple[numpy.ndarray, float]
+        ``(b, delay)`` where ``b`` is a one-dimensional array of FIR
+        coefficients and ``delay`` is the filter delay in samples.
+
+    Raises
+    ------
+    TypeError
+        If scalar inputs are not real numeric values.
+    ValueError
+        If frequencies or order are outside their accepted ranges.
+    NotImplementedError
+        If ``order`` is ``None``.
+
+    Notes
+    -----
+    This function implements the Biosiglib ``tools.lpd_filter`` specification
+    and follows the MATLAB/Biosigmat-compatible low-pass differentiator design.
+
+    Explicit ``order`` design is supported. Automatic order selection is not
+    currently implemented. The effective order is rounded up to an even value.
+    Coefficients are scaled by ``sampling_frequency / (2*pi)``, and the
+    returned delay is ``filter_order / 2`` for the effective filter order.
+
+    Examples
+    --------
+    >>> from biosigpy.tools import lpd_filter
+    >>> b, delay = lpd_filter(256.0, 12.0, order=4)
+    >>> b.shape
+    (5,)
+    >>> delay
+    2.0
+    """
 
     sampling_frequency = as_positive_real_scalar(
         sampling_frequency, name="sampling_frequency"

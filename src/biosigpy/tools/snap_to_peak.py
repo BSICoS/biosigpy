@@ -9,7 +9,58 @@ from biosigpy.tools._validation import as_positive_real_scalar, as_real_vector
 def snap_to_peak(
     ecg: ArrayLike, detections: ArrayLike, window_size: float = 20
 ) -> np.ndarray:
-    """Refine one-based detection positions to local ECG maxima."""
+    """Refine one-based detection positions to local ECG maxima.
+
+    Parameters
+    ----------
+    ecg : array_like
+        One-dimensional real numeric ECG signal with at least two samples.
+        ``NaN`` values are allowed and act as hard finite-segment boundaries.
+        Infinite values are invalid.
+    detections : array_like
+        One-dimensional real numeric vector of approximate detection positions
+        in one-based sample coordinates. Empty input is allowed. ``NaN``
+        detections return ``NaN`` in the aligned output position. Infinite
+        values are invalid.
+    window_size : float, optional
+        Positive search radius in samples. The value is rounded to the nearest
+        integer before constructing search windows.
+
+    Returns
+    -------
+    numpy.ndarray
+        One-dimensional array of refined detections in one-based sample
+        coordinates, aligned with ``detections``.
+
+    Raises
+    ------
+    TypeError
+        If ``ecg`` or ``detections`` is not real numeric data.
+    ValueError
+        If ``ecg`` is empty, has fewer than two samples, is not a vector,
+        contains infinite values, if finite detections are outside
+        ``[1, len(ecg)]``, or if ``window_size`` is not positive.
+
+    Notes
+    -----
+    This function implements the Biosiglib ``tools.snap_to_peak``
+    specification. The public API uses one-based sample coordinates for
+    Biosiglib and Biosigmat compatibility. Python callers using zero-based
+    indices must convert at the API boundary.
+
+    Search windows never cross ``NaN`` ECG gaps. If a finite detection points
+    to a ``NaN`` ECG sample, the aligned output value is ``NaN``. When multiple
+    samples share the maximum value inside a clipped search window, the first
+    maximum is returned.
+
+    Examples
+    --------
+    >>> import numpy as np
+    >>> from biosigpy.tools import snap_to_peak
+    >>> ecg = np.array([0.1, 0.4, 1.0, 0.5, 0.2])
+    >>> snap_to_peak(ecg, np.array([2.0]), window_size=2)
+    array([3.])
+    """
 
     ecg = as_real_vector(ecg, name="ecg")
     if ecg.size == 0:
