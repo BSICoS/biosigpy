@@ -1,5 +1,7 @@
 """Conformance tests for ecg.pantompkins."""
 
+import importlib
+
 import numpy as np
 import pytest
 
@@ -10,6 +12,9 @@ from conformance import (
     load_case,
     load_input,
 )
+
+
+PANTOMPKINS_MODULE = importlib.import_module("biosigpy.ecg.pantompkins")
 
 
 EXPECTED_ERROR_CASES = [
@@ -51,3 +56,44 @@ def test_expected_error_conformance(case_id: str) -> None:
     assert_expected_error(
         lambda: pantompkins(ecg, sampling_frequency), case_definition
     )
+
+
+def test_filters_nan_refined_detections_before_r_wave_times(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    def fake_snap_to_peak(
+        ecg: np.ndarray, detections: np.ndarray, window_size: float
+    ) -> np.ndarray:
+        np.testing.assert_array_equal(detections, np.array([2.0, 5.0]))
+        assert window_size == 3.0
+        return np.array([np.nan, 5.0])
+
+    monkeypatch.setattr(
+        PANTOMPKINS_MODULE.signal,
+        "butter",
+        lambda *args, **kwargs: (np.array([1.0]), np.array([1.0])),
+    )
+    monkeypatch.setattr(
+        PANTOMPKINS_MODULE.signal,
+        "filtfilt",
+        lambda b, a, ecg: np.asarray(ecg, dtype=np.float64),
+    )
+    monkeypatch.setattr(
+        PANTOMPKINS_MODULE.signal,
+        "lfilter",
+        lambda b, a, ecg: np.asarray(ecg, dtype=np.float64),
+    )
+    monkeypatch.setattr(
+        PANTOMPKINS_MODULE.signal,
+        "find_peaks",
+        lambda envelope, distance: (np.array([1, 4]), {}),
+    )
+    monkeypatch.setattr(PANTOMPKINS_MODULE, "snap_to_peak", fake_snap_to_peak)
+
+    outputs = pantompkins(
+        np.arange(10.0),
+        40.0,
+        snap_to_peak_window_size=3.0,
+    )
+
+    np.testing.assert_array_equal(outputs["r_wave_times"], np.array([0.1]))

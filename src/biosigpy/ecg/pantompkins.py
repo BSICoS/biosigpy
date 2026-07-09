@@ -4,6 +4,9 @@ import numpy as np
 from numpy.typing import ArrayLike
 from scipy import signal
 
+from biosigpy.tools._validation import as_positive_real_scalar, as_real_vector
+from biosigpy.tools.snap_to_peak import snap_to_peak
+
 
 def pantompkins(
     ecg: ArrayLike,
@@ -20,21 +23,16 @@ def pantompkins(
     """
 
     ecg_vector = _ecg_vector(ecg)
-    fs = _positive_scalar(sampling_frequency, name="sampling_frequency")
+    fs = as_positive_real_scalar(sampling_frequency, name="sampling_frequency")
     bandpass = _bandpass_pair(bandpass_frequency, fs)
-    window_seconds = _positive_scalar(
+    window_seconds = as_positive_real_scalar(
         integration_window_size, name="integration_window_size"
     )
-    peak_distance_seconds = _positive_scalar(
+    peak_distance_seconds = as_positive_real_scalar(
         minimum_peak_distance, name="minimum_peak_distance"
     )
-    snap_window = int(
-        np.floor(
-            _positive_scalar(
-                snap_to_peak_window_size, name="snap_to_peak_window_size"
-            )
-            + 0.5
-        )
+    snap_to_peak_window_size = as_positive_real_scalar(
+        snap_to_peak_window_size, name="snap_to_peak_window_size"
     )
 
     b_bandpass, a_bandpass = signal.butter(
@@ -57,7 +55,10 @@ def pantompkins(
     )
     peak_indices = np.unique(np.sort(peak_indices))
     filter_edge_margin = 3 * max(b_bandpass.size, a_bandpass.size)
-    peak_indices = _snap_to_peak(ecg_vector, peak_indices, snap_window)
+    peak_indices = snap_to_peak(
+        ecg_vector, peak_indices.astype(np.float64) + 1.0, snap_to_peak_window_size
+    )
+    peak_indices = peak_indices[np.isfinite(peak_indices)] - 1.0
     peak_indices = peak_indices[peak_indices >= filter_edge_margin]
 
     return {
@@ -69,50 +70,12 @@ def pantompkins(
 
 
 def _ecg_vector(ecg: ArrayLike) -> np.ndarray:
-    if isinstance(ecg, (str, bytes)):
-        raise TypeError("ecg must be numeric")
-
-    try:
-        array = np.asarray(ecg)
-    except (TypeError, ValueError) as error:
-        raise TypeError("ecg must be numeric") from error
-
-    if array.ndim == 1:
-        pass
-    elif array.ndim == 2 and 1 in array.shape:
-        array = array.reshape(-1)
-    else:
-        raise ValueError("ecg must be a vector")
-
-    if not np.issubdtype(array.dtype, np.number) or np.issubdtype(
-        array.dtype, np.complexfloating
-    ):
-        raise TypeError("ecg must be real numeric data")
-    if array.size < 2:
+    ecg = as_real_vector(ecg, name="ecg")
+    if ecg.size < 2:
         raise ValueError("ecg must contain at least two samples")
-
-    vector = np.asarray(array, dtype=np.float64)
-    if np.any(np.isinf(vector)):
+    if np.any(np.isinf(ecg)):
         raise ValueError("ecg must not contain infinite values")
-    return vector
-
-
-def _positive_scalar(value: float, *, name: str) -> float:
-    if isinstance(value, (str, bytes)):
-        raise TypeError(f"{name} must be numeric")
-
-    array = np.asarray(value)
-    if array.ndim != 0:
-        raise ValueError(f"{name} must be scalar")
-    if not np.issubdtype(array.dtype, np.number) or np.issubdtype(
-        array.dtype, np.complexfloating
-    ):
-        raise TypeError(f"{name} must be real numeric data")
-
-    scalar = float(array)
-    if not np.isfinite(scalar) or scalar <= 0:
-        raise ValueError(f"{name} must be finite and positive")
-    return scalar
+    return ecg
 
 
 def _bandpass_pair(value: ArrayLike, sampling_frequency: float) -> np.ndarray:
@@ -153,15 +116,3 @@ def _default_derivative_filter(
     normalized_stop = stop_frequency / (sampling_frequency / 2.0)
     scale = sampling_frequency * normalized_stop / 3.0
     return scale * np.array([2.0, 1.0, 0.0, -1.0, -2.0]) / 5.0
-
-
-def _snap_to_peak(
-    ecg: np.ndarray, peak_indices: np.ndarray, window_size: int
-) -> np.ndarray:
-    refined = np.empty_like(peak_indices)
-    for index, peak_index in enumerate(peak_indices):
-        window_start = max(0, int(peak_index) - window_size)
-        window_end = min(ecg.size - 1, int(peak_index) + window_size)
-        window = ecg[window_start : window_end + 1]
-        refined[index] = window_start + int(np.argmax(window))
-    return refined
