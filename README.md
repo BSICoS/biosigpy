@@ -23,24 +23,9 @@ cd biosigpy
 python -m venv .venv
 source .venv/bin/activate
 python -m pip install --upgrade pip
-python -m pip install -e ".[examples]"
 ```
 
 See [Installation](docs/getting-started/installation.md) for Windows PowerShell activation, development extras, and documentation build setup.
-
-## Basic usage
-
-```python
-import numpy as np
-
-from biosigpy.hrv import tdmetrics
-
-intervals = np.array([0.82, 0.80, 0.84, np.nan, 0.81, 0.83])
-metrics = tdmetrics(intervals)
-
-print(metrics["mhr"])
-print(metrics["rmssd"])
-```
 
 ## Biosiglib conformance
 
