@@ -19,6 +19,10 @@
       "status": "conformant",
       "entry_point": "biosigpy.ecg.pantompkins.pantompkins"
     },
+    "tools.lpd_filter": {
+      "status": "conformant",
+      "entry_point": "biosigpy.tools.lpd_filter.lpd_filter"
+    },
     "tools.medfilt_threshold": {
       "status": "conformant",
       "entry_point": "biosigpy.tools.medfilt_threshold.medfilt_threshold"
