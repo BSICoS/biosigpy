@@ -1,16 +1,21 @@
-# Biosigpy
+# biosigpy - Biomedical Signal Processing Library for Python
 
-**Python implementation of the Biosiglib specifications for biomedical signal processing.**
+[![Python](https://img.shields.io/badge/Python-3.10%2B-blue)](https://www.python.org/)
+[![License](https://img.shields.io/badge/License-GPL--3.0-green.svg)](LICENSE)
+[![Tests](https://img.shields.io/badge/Tests-Passing-brightgreen)](tests/)
+[![Version](https://img.shields.io/badge/Version-0.0.0-orange)](pyproject.toml)
 
-Biosigpy provides Python implementations of the language-independent algorithms and behavior defined by [Biosiglib](https://github.com/BSICoS/biosiglib). It is part of the BSICoS biomedical signal-processing ecosystem together with [Biosigmat](https://github.com/BSICoS/biosigmat), the MATLAB implementation.
+Python implementation of the language-independent [Biosiglib](https://github.com/BSICoS/biosiglib) specifications for biomedical signal processing.
 
-## Status
+---
 
-Biosigpy is in its initial development stage and is not yet available as a stable package.
+**Developed by**: [BSICoS Research Group](https://bsicos.i3a.es/)
 
-## Installation for development
+**Status**: Active Development
 
-Clone the repository and run examples or tests from the source tree:
+## Installation
+
+Biosigpy is currently installed from the repository source tree:
 
 ```bash
 git clone https://github.com/BSICoS/biosigpy.git
@@ -21,15 +26,7 @@ python -m pip install --upgrade pip
 python -m pip install -e ".[examples]"
 ```
 
-On Windows PowerShell, use `.venv\Scripts\Activate.ps1` instead of `source .venv/bin/activate`.
-
-For development and tests, install the development extras instead:
-
-```bash
-python -m pip install -e ".[dev]"
-```
-
-Use `.[examples]` when you only want to run the examples; use `.[dev]` when contributing to Biosigpy or running the test suite.
+See [Installation](docs/getting-started/installation.md) for Windows PowerShell activation, development extras, and documentation build setup.
 
 ## Basic usage
 
@@ -45,58 +42,24 @@ print(metrics["mhr"])
 print(metrics["rmssd"])
 ```
 
-More examples are available under [`examples/`](examples/):
+## Biosiglib conformance
 
-```bash
-python examples/hrv/tdmetrics_example.py
-python examples/ecg/pantompkins_example.py
-```
+Biosigpy implements conformant Python APIs for the Biosiglib algorithms currently in scope. The root `conformance.json` pins the exact Biosiglib revision used by shared conformance tests.
 
-Examples that generate figures open an interactive Matplotlib window when an
-interactive backend is available. In non-interactive environments, pass
-`--save-figure PATH` to save the plot instead. To check the active backend:
-
-```bash
-python -c "import matplotlib; print(matplotlib.get_backend())"
-```
-
-In VS Code, open any example file, use **Run and Debug**, and select
-`Biosigpy: current file with QtAgg`. The launch configuration runs the
-currently open file because it uses `"program": "${file}"`.
+See [Conformance](docs/conformance.md) for validation commands and local checkout details.
 
 ## Documentation
 
-The Biosigpy documentation site is available at [https://bsicos.github.io/biosigpy/](https://bsicos.github.io/biosigpy/).
+> **Documentation site**
+>
+> Visit: [https://bsicos.github.io/biosigpy/](https://bsicos.github.io/biosigpy/)
 
-Language-independent algorithm behavior is documented centrally in [Biosiglib](https://github.com/BSICoS/biosiglib). Biosigpy documentation should focus on Python installation, API usage, executable examples, and Python-specific implementation notes.
+API reference pages are generated from public Python docstrings using `mkdocstrings`. Detailed installation, examples, conformance, and contribution notes live in [`docs/`](docs/).
 
-To build the documentation locally:
+## Support
 
-```bash
-python -m pip install -e ".[docs]"
-mkdocs serve
-mkdocs build --strict
-```
-
-## Conformance
-
-Biosigpy includes `conformance.json`, a machine-readable manifest that pins the exact Biosiglib revision used for shared conformance tests.
-
-Shared conformance cases define the scientific and computational behavior that must remain aligned across implementations. Python-specific tests may additionally cover Python API behavior, data types, exceptions, packaging, and internal implementation details.
-
-Currently conformant APIs:
-
-- `biosigpy.hrv.tdmetrics.tdmetrics`
-- `biosigpy.ecg.pantompkins.pantompkins`
-- `biosigpy.tools.medfilt_threshold.medfilt_threshold`
-- `biosigpy.tools.snap_to_peak.snap_to_peak`
-- `biosigpy.tools.nan_filter.nan_filter`
-- `biosigpy.tools.nan_filtfilt.nan_filtfilt`
-- `biosigpy.tools.lpd_filter.lpd_filter`
-
-## Contributing
-
-Changes that alter scientific or computational behavior must be reflected in Biosiglib and reviewed explicitly before implementation. Language-specific choices are fine when they do not change the normative behavior.
+- Report issues on [GitHub Issues](https://github.com/BSICoS/biosigpy/issues).
+- Contact the development team for additional support.
 
 ## License
 
