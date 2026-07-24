@@ -8,6 +8,7 @@ from pathlib import Path
 import numpy as np
 
 from biosigpy.hrv import tdmetrics
+from biosigpy.tools import medfilt_threshold
 
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[2]
@@ -28,33 +29,6 @@ def _load_column(path: Path, column_name: str) -> np.ndarray:
         return np.asarray([float(row[column_name]) for row in reader])
 
 
-def _medfilt_threshold(
-    values: np.ndarray, window: int, factor: float, max_threshold: float
-) -> np.ndarray:
-    if values.size < window:
-        window = values.size
-
-    half_window = window // 2
-    padded_values = np.concatenate(
-        (
-            np.flip(values[:half_window]),
-            values,
-            np.flip(values[-half_window:]),
-        )
-    )
-
-    # Match the MATLAB example's medfiltThreshold(dtk, 50, 1.5, 1.5)
-    # preprocessing without adding a public Biosigpy helper.
-    filter_size = window - 1
-    filter_half_width = filter_size // 2
-    threshold = np.empty(values.size, dtype=np.float64)
-    for index, center in enumerate(range(half_window, half_window + values.size)):
-        start = center - filter_half_width
-        stop = center + filter_half_width + 1
-        threshold[index] = np.median(padded_values[start:stop])
-    return np.minimum(factor * threshold, max_threshold)
-
-
 def main() -> None:
     # Load pre-calculated ECG R-wave timing data from the copied fixture.
     r_wave_times = _load_column(FIXTURE_PATH, "r_wave_times")
@@ -62,7 +36,7 @@ def main() -> None:
     # Compute RR intervals, remove median-threshold outliers, and pass the
     # cleaned interval series to tdmetrics, matching the Biosigmat example.
     intervals = np.diff(r_wave_times)
-    threshold = _medfilt_threshold(intervals, 50, 1.5, 1.5)
+    threshold = medfilt_threshold(intervals, 50, 1.5, 1.5)
     outliers = intervals > threshold
     intervals_without_outliers = intervals[~outliers]
 
