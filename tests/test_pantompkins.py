@@ -36,10 +36,10 @@ def test_positive_conformance() -> None:
     assert set(outputs) == {
         "r_wave_times",
         "ecg_filtered",
-        "decg",
+        "decg_squared",
         "decg_envelope",
     }
-    for output_id in ("ecg_filtered", "decg", "decg_envelope"):
+    for output_id in ("ecg_filtered", "decg_squared", "decg_envelope"):
         output = outputs[output_id]
         assert np.issubdtype(output.dtype, np.number)
         assert output.ndim == 1
@@ -124,6 +124,7 @@ def test_filters_nan_refined_detections_before_r_wave_times(
     )
 
     np.testing.assert_array_equal(outputs["r_wave_times"], np.array([0.1]))
+    np.testing.assert_array_equal(outputs["decg_squared"], np.arange(10.0) ** 2)
 
 
 def test_nan_gap_is_preserved_as_a_hard_filtering_boundary() -> None:
@@ -135,9 +136,12 @@ def test_nan_gap_is_preserved_as_a_hard_filtering_boundary() -> None:
 
     outputs = pantompkins(ecg, sampling_frequency)
 
+    outside_gap = np.ones(ecg.shape, dtype=bool)
+    outside_gap[gap] = False
+
     assert np.all(np.isnan(outputs["ecg_filtered"][gap]))
-    assert np.all(np.isnan(outputs["decg"][gap]))
-    assert np.any(np.isfinite(outputs["ecg_filtered"][:500]))
-    assert np.any(np.isfinite(outputs["ecg_filtered"][700:]))
+    assert np.all(np.isnan(outputs["decg_squared"][gap]))
+    assert np.all(np.isfinite(outputs["ecg_filtered"][outside_gap]))
+    assert np.all(np.isfinite(outputs["decg_squared"][outside_gap]))
     assert not np.any(np.isinf(outputs["ecg_filtered"]))
-    assert not np.any(np.isinf(outputs["decg"]))
+    assert not np.any(np.isinf(outputs["decg_squared"]))
