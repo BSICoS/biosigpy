@@ -80,21 +80,35 @@ def test_filters_nan_refined_detections_before_r_wave_times(
         assert order == 4
         return np.array([1.0]), 0.0
 
+    def fake_nan_filtfilt(
+        b: np.ndarray,
+        a: np.ndarray,
+        ecg: np.ndarray,
+        max_gap: int = 0,
+    ) -> np.ndarray:
+        np.testing.assert_array_equal(b, np.array([1.0]))
+        np.testing.assert_array_equal(a, np.array([1.0]))
+        assert max_gap == 0
+        return np.asarray(ecg, dtype=np.float64)
+
+    def fake_nan_filter(
+        b: np.ndarray,
+        a: np.ndarray,
+        ecg: np.ndarray,
+        max_gap: int = 0,
+    ) -> np.ndarray:
+        np.testing.assert_array_equal(b, np.array([1.0]))
+        np.testing.assert_array_equal(a, np.array([1.0]))
+        assert max_gap == 0
+        return np.asarray(ecg, dtype=np.float64)
+
     monkeypatch.setattr(
         PANTOMPKINS_MODULE.signal,
         "butter",
         lambda *args, **kwargs: (np.array([1.0]), np.array([1.0])),
     )
-    monkeypatch.setattr(
-        PANTOMPKINS_MODULE.signal,
-        "filtfilt",
-        lambda b, a, ecg: np.asarray(ecg, dtype=np.float64),
-    )
-    monkeypatch.setattr(
-        PANTOMPKINS_MODULE.signal,
-        "lfilter",
-        lambda b, a, ecg: np.asarray(ecg, dtype=np.float64),
-    )
+    monkeypatch.setattr(PANTOMPKINS_MODULE, "nan_filtfilt", fake_nan_filtfilt)
+    monkeypatch.setattr(PANTOMPKINS_MODULE, "nan_filter", fake_nan_filter)
     monkeypatch.setattr(
         PANTOMPKINS_MODULE.signal,
         "find_peaks",
@@ -110,3 +124,20 @@ def test_filters_nan_refined_detections_before_r_wave_times(
     )
 
     np.testing.assert_array_equal(outputs["r_wave_times"], np.array([0.1]))
+
+
+def test_nan_gap_is_preserved_as_a_hard_filtering_boundary() -> None:
+    sampling_frequency = 100.0
+    time = np.arange(0.0, 12.0, 1.0 / sampling_frequency)
+    ecg = np.sin(2.0 * np.pi * 1.2 * time)
+    gap = slice(550, 650)
+    ecg[gap] = np.nan
+
+    outputs = pantompkins(ecg, sampling_frequency)
+
+    assert np.all(np.isnan(outputs["ecg_filtered"][gap]))
+    assert np.all(np.isnan(outputs["decg"][gap]))
+    assert np.any(np.isfinite(outputs["ecg_filtered"][:500]))
+    assert np.any(np.isfinite(outputs["ecg_filtered"][700:]))
+    assert not np.any(np.isinf(outputs["ecg_filtered"]))
+    assert not np.any(np.isinf(outputs["decg"]))
