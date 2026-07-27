@@ -67,10 +67,22 @@ def nan_filtfilt(
     minimum_segment_length = 3 * filter_order + 1
     padlen = 3 * filter_order
 
-    def filter_func(
-        b: np.ndarray, a: np.ndarray, segment_filled: np.ndarray
-    ) -> np.ndarray:
-        return signal.filtfilt(b, a, segment_filled, padlen=padlen)
+    if filter_order == 0:
+        if a[0] == 0:
+            raise ValueError("a[0] must be nonzero")
+        zero_phase_gain = (b[0] / a[0]) ** 2
+
+        def filter_func(
+            b: np.ndarray, a: np.ndarray, segment_filled: np.ndarray
+        ) -> np.ndarray:
+            return segment_filled * zero_phase_gain
+
+    else:
+
+        def filter_func(
+            b: np.ndarray, a: np.ndarray, segment_filled: np.ndarray
+        ) -> np.ndarray:
+            return signal.filtfilt(b, a, segment_filled, padlen=padlen)
 
     return process_nan_signal(
         b, a, x, max_gap, filter_func, minimum_segment_length
