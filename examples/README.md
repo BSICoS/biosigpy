@@ -15,6 +15,7 @@ Run examples from the repository root:
 ```bash
 python examples/hrv/tdmetrics_example.py
 python examples/ecg/pantompkins_example.py
+python examples/ecg/sloperange_example.py
 ```
 
 On Windows PowerShell:
@@ -22,6 +23,7 @@ On Windows PowerShell:
 ```powershell
 python examples\hrv\tdmetrics_example.py
 python examples\ecg\pantompkins_example.py
+python examples\ecg\sloperange_example.py
 ```
 
 Examples that generate figures open an interactive Matplotlib window when an
@@ -34,6 +36,7 @@ MPLBACKEND=QtAgg python examples/ecg/pantompkins_example.py
 
 ```bash
 MPLBACKEND=Agg python examples/ecg/pantompkins_example.py --save-figure /tmp/pantompkins_example.png
+MPLBACKEND=Agg python examples/ecg/sloperange_example.py --save-figure /tmp/sloperange_example.png
 ```
 
 On Windows PowerShell:
@@ -41,6 +44,7 @@ On Windows PowerShell:
 ```powershell
 $env:MPLBACKEND = "Agg"
 python examples\ecg\pantompkins_example.py --save-figure "$env:TEMP\pantompkins_example.png"
+python examples\ecg\sloperange_example.py --save-figure "$env:TEMP\sloperange_example.png"
 Remove-Item Env:\MPLBACKEND
 ```
 
@@ -60,5 +64,6 @@ For local validation:
 python -m pip install -e ".[dev]"
 python examples/hrv/tdmetrics_example.py
 MPLBACKEND=Agg python examples/ecg/pantompkins_example.py --save-figure /tmp/pantompkins_example.png
+MPLBACKEND=Agg python examples/ecg/sloperange_example.py --save-figure /tmp/sloperange_example.png
 python -m pytest
 ```
