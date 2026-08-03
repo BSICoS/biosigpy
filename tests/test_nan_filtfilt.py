@@ -4,30 +4,34 @@ import numpy as np
 import pytest
 
 from biosigpy.tools.nan_filtfilt import nan_filtfilt
-from conformance import assert_expected_outputs, load_case, load_input
+from conformance import (
+    assert_expected_error,
+    assert_expected_outputs,
+    case_id,
+    cases_for_specification,
+    is_expected_error,
+    load_input,
+)
 
 
-VALID_CASES = [
-    "tools.nan_filtfilt.no_nan_equivalent_filtfilt",
-    "tools.nan_filtfilt.short_nan_gap_interpolation",
-    "tools.nan_filtfilt.long_nan_gap_segmentation",
-    "tools.nan_filtfilt.row_vector_orientation",
-    "tools.nan_filtfilt.boundary_nan_preserved",
-    "tools.nan_filtfilt.too_short_segments_nan",
-]
-
-
-@pytest.mark.parametrize("case_id", VALID_CASES)
-def test_positive_conformance(case_id: str) -> None:
-    case_definition = load_case(case_id)
+@pytest.mark.parametrize(
+    "case_definition",
+    cases_for_specification("tools.nan_filtfilt"),
+    ids=case_id,
+)
+def test_conformance(case_definition: dict[str, object]) -> None:
     parameters = case_definition["parameters"]
-
-    filtered_signal = nan_filtfilt(
+    run_case = lambda: nan_filtfilt(
         load_input(case_definition, "numerator_coefficients"),
         load_input(case_definition, "denominator_coefficients"),
         load_input(case_definition, "signal"),
         parameters.get("max_gap", 0),
     )
+    if is_expected_error(case_definition):
+        assert_expected_error(run_case, case_definition)
+        return
+
+    filtered_signal = run_case()
 
     assert np.issubdtype(filtered_signal.dtype, np.number)
     assert filtered_signal.ndim == 1
