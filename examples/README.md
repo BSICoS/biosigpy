@@ -14,6 +14,7 @@ Run examples from the repository root:
 
 ```bash
 python examples/hrv/tdmetrics_example.py
+python examples/hrv/preprocessing_example.py
 python examples/ecg/pantompkins_example.py
 python examples/ecg/sloperange_example.py
 ```
@@ -22,6 +23,7 @@ On Windows PowerShell:
 
 ```powershell
 python examples\hrv\tdmetrics_example.py
+python examples\hrv\preprocessing_example.py
 python examples\ecg\pantompkins_example.py
 python examples\ecg\sloperange_example.py
 ```
@@ -63,6 +65,7 @@ For local validation:
 ```bash
 python -m pip install -e ".[dev]"
 python examples/hrv/tdmetrics_example.py
+MPLBACKEND=Agg python examples/hrv/preprocessing_example.py --save-figure /tmp/hrv_preprocessing_example.png
 MPLBACKEND=Agg python examples/ecg/pantompkins_example.py --save-figure /tmp/pantompkins_example.png
 MPLBACKEND=Agg python examples/ecg/sloperange_example.py --save-figure /tmp/sloperange_example.png
 python -m pytest

@@ -226,8 +226,7 @@ def assert_expected_outputs(
                 expected_output["column"],
             )
         )
-        if isinstance(expected_value, str) and expected_value == "NaN":
-            expected_value = np.nan
+        expected_value = _decode_expected_value(expected_value)
         np.testing.assert_allclose(
             actual_outputs[output_id],
             expected_value,
@@ -235,6 +234,16 @@ def assert_expected_outputs(
             atol=expected_output["absolute_tolerance"],
             equal_nan=case_definition["nan_equal"],
         )
+
+
+def _decode_expected_value(value: Any) -> Any:
+    if isinstance(value, str):
+        if value != "NaN":
+            raise RuntimeError(f"Unsupported expected string value {value!r}")
+        return np.nan
+    if isinstance(value, list):
+        return [_decode_expected_value(item) for item in value]
+    return value
 
 
 def assert_expected_error(
