@@ -77,7 +77,9 @@ def main() -> None:
     derivative_ecg = nan_filter(
         derivative_filter, [1.0], ecg, max_gap=0
     )
-    edr = sloperange(derivative_ecg, r_wave_times, sampling_frequency)
+    slope_range = sloperange(
+        derivative_ecg, r_wave_times, sampling_frequency
+    )
     time = np.arange(ecg.size, dtype=np.float64) / sampling_frequency
     r_wave_samples = np.floor(
         r_wave_times * sampling_frequency + 0.5
@@ -87,8 +89,14 @@ def main() -> None:
     print("=====================================")
     print(f"ECG samples:                {ecg.size}")
     print(f"R waves:                    {r_wave_times.size}")
-    print(f"Finite EDR estimates:       {np.count_nonzero(np.isfinite(edr))}")
-    print(f"Boundary NaN estimates:     {np.count_nonzero(np.isnan(edr))}")
+    print(
+        "Finite EDR estimates:       "
+        f"{np.count_nonzero(np.isfinite(slope_range.edr))}"
+    )
+    print(
+        "Boundary NaN estimates:     "
+        f"{np.count_nonzero(np.isnan(slope_range.edr))}"
+    )
 
     figure, axes = plt.subplots(4, 1, sharex=True, figsize=(12, 9))
     axes[0].plot(time, ecg, color="tab:blue", linewidth=1)
@@ -103,10 +111,50 @@ def main() -> None:
     axes[0].set_title("ECG with reference R waves")
 
     axes[1].plot(time, derivative_ecg, color="tab:purple", linewidth=1)
+    axes[1].plot(
+        time,
+        slope_range.upslopes,
+        color="black",
+        linewidth=2,
+        label="Upslope windows",
+    )
+    axes[1].plot(
+        time,
+        slope_range.downslopes,
+        color="tab:pink",
+        linewidth=2,
+        linestyle="--",
+        label="Downslope windows",
+    )
+    finite_upmax = np.isfinite(slope_range.upslope_max_positions)
+    finite_downmin = np.isfinite(slope_range.downslope_min_positions)
+    upmax_positions = slope_range.upslope_max_positions[finite_upmax].astype(
+        int
+    )
+    downmin_positions = slope_range.downslope_min_positions[
+        finite_downmin
+    ].astype(int)
+    axes[1].plot(
+        time[upmax_positions],
+        derivative_ecg[upmax_positions],
+        "v",
+        color="tab:blue",
+        label="Upslope maxima",
+    )
+    axes[1].plot(
+        time[downmin_positions],
+        derivative_ecg[downmin_positions],
+        "^",
+        color="tab:red",
+        label="Downslope minima",
+    )
     axes[1].set_ylabel("Derivative ECG")
-    axes[1].set_title("Low-pass derivative ECG")
+    axes[1].set_title("Slope windows and selected extrema")
+    axes[1].legend(loc="upper right")
 
-    axes[2].plot(r_wave_times, edr, color="tab:green", linewidth=1)
+    axes[2].plot(
+        r_wave_times, slope_range.edr, color="tab:green", linewidth=1
+    )
     axes[2].set_ylabel("EDR")
     axes[2].set_title("Slope-range ECG-derived respiration")
 

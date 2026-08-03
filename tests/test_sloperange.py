@@ -3,9 +3,11 @@
 import numpy as np
 import pytest
 
+from biosigpy import SlopeRangeResult as top_level_slope_range_result
 from biosigpy import sloperange as top_level_sloperange
+from biosigpy.ecg import SlopeRangeResult as ecg_slope_range_result
 from biosigpy.ecg import sloperange as ecg_sloperange
-from biosigpy.ecg.sloperange import sloperange
+from biosigpy.ecg.sloperange import SlopeRangeResult, sloperange
 from conformance import (
     assert_expected_error,
     assert_expected_outputs,
@@ -30,10 +32,16 @@ def test_conformance(case_definition: dict[str, object]) -> None:
         assert_expected_error(run_case, case_definition)
         return
 
-    edr = run_case()
-    assert edr.ndim == 1
-    assert edr.shape == np.asarray(r_wave_times).reshape(-1).shape
-    assert_expected_outputs({"edr": edr}, case_definition)
+    result = run_case()
+    beat_shape = np.asarray(r_wave_times).reshape(-1).shape
+    signal_shape = np.asarray(decg).reshape(-1).shape
+    assert result.edr.shape == beat_shape
+    assert result.upslope_max_positions.shape == beat_shape
+    assert result.downslope_min_positions.shape == beat_shape
+    assert result.upslopes.shape == signal_shape
+    assert result.downslopes.shape == signal_shape
+    assert all(output.ndim == 1 for output in result)
+    assert_expected_outputs(result._asdict(), case_definition)
 
 
 def test_row_and_column_vectors_have_identical_semantics() -> None:
@@ -47,8 +55,12 @@ def test_row_and_column_vectors_have_identical_semantics() -> None:
         decg.reshape(1, -1), r_wave_times.reshape(-1, 1), 100.0
     )
 
-    np.testing.assert_array_equal(actual, expected)
-    assert actual.shape == (3,)
+    for field_name in SlopeRangeResult._fields:
+        np.testing.assert_array_equal(
+            getattr(actual, field_name), getattr(expected, field_name)
+        )
+    assert actual.edr.shape == (3,)
+    assert actual.upslopes.shape == (40,)
 
 
 def test_half_sample_positions_round_like_biosiglib() -> None:
@@ -56,9 +68,34 @@ def test_half_sample_positions_round_like_biosiglib() -> None:
     decg[13] = 5.0
     decg[15] = -2.0
 
-    edr = sloperange(decg, [0.105], 100.0)
+    result = sloperange(decg, [0.105], 100.0)
 
-    np.testing.assert_array_equal(edr, np.array([7.0]))
+    np.testing.assert_array_equal(result.edr, np.array([7.0]))
+    np.testing.assert_array_equal(
+        result.upslope_max_positions, np.array([13.0])
+    )
+    np.testing.assert_array_equal(
+        result.downslope_min_positions, np.array([15.0])
+    )
+
+
+def test_named_result_unpacks_in_documented_order() -> None:
+    result = sloperange(np.zeros(40), [0.1], 100.0)
+    edr, upslopes, downslopes, upmaxpos, downminpos = result
+
+    assert isinstance(result, SlopeRangeResult)
+    assert SlopeRangeResult._fields == (
+        "edr",
+        "upslopes",
+        "downslopes",
+        "upslope_max_positions",
+        "downslope_min_positions",
+    )
+    assert edr is result.edr
+    assert upslopes is result.upslopes
+    assert downslopes is result.downslopes
+    assert upmaxpos is result.upslope_max_positions
+    assert downminpos is result.downslope_min_positions
 
 
 @pytest.mark.parametrize(
@@ -88,3 +125,5 @@ def test_python_validation(
 def test_public_reexports_reference_the_canonical_function() -> None:
     assert ecg_sloperange is sloperange
     assert top_level_sloperange is sloperange
+    assert ecg_slope_range_result is SlopeRangeResult
+    assert top_level_slope_range_result is SlopeRangeResult
