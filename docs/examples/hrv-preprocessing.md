@@ -1,0 +1,21 @@
+# HRV Event Preprocessing
+
+Script: `examples/hrv/preprocessing_example.py`
+
+This synthetic example inserts a false-positive event and removes several true
+events. It applies the recommended explicit sequence, first `removefp` and then
+`fillgaps`, and plots the event timestamps and interval series before and after
+correction. The numerical functions have no GUI side effects; plotting belongs
+only to this example.
+
+Run it from the repository root:
+
+```bash
+python examples/hrv/preprocessing_example.py
+```
+
+To save the figure instead of opening an interactive window:
+
+```bash
+python examples/hrv/preprocessing_example.py --save-figure hrv-preprocessing.png
+```
