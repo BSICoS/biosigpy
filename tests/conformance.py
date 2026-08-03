@@ -59,18 +59,114 @@ def biosiglib_root() -> Path:
 
 @lru_cache(maxsize=None)
 def load_case(case_id: str) -> dict[str, Any]:
-    module, algorithm, case_name = case_id.split(".", maxsplit=2)
-    case_path = (
-        biosiglib_root()
-        / "conformance"
-        / module
-        / algorithm
-        / f"{case_name}.json"
+    matches = [case for case in discover_cases() if case["id"] == case_id]
+    if len(matches) != 1:
+        raise RuntimeError(
+            f"Expected exactly one discovered conformance case {case_id!r}; "
+            f"found {len(matches)}"
+        )
+    return matches[0]
+
+
+@lru_cache(maxsize=1)
+def discover_cases() -> tuple[dict[str, Any], ...]:
+    """Discover every case for specifications declared conformant."""
+
+    discovered: list[dict[str, Any]] = []
+    seen_case_ids: set[str] = set()
+    manifest = load_manifest()
+    conformant_specification_ids = sorted(
+        specification_id
+        for specification_id, implementation in manifest["specifications"].items()
+        if implementation["status"] == "conformant"
     )
-    case_definition = json.loads(case_path.read_text(encoding="utf-8"))
-    if case_definition["id"] != case_id:
-        raise RuntimeError(f"Conformance case ID mismatch in {case_path}")
-    return case_definition
+
+    for specification_id in conformant_specification_ids:
+        module, algorithm = specification_id.split(".", maxsplit=1)
+        case_directory = biosiglib_root() / "conformance" / module / algorithm
+        case_paths = sorted(case_directory.glob("*.json"))
+        if not case_paths:
+            raise RuntimeError(
+                "No Biosiglib conformance cases found for conformant "
+                f"specification {specification_id!r} in {case_directory}"
+            )
+
+        for case_path in case_paths:
+            case_definition = json.loads(case_path.read_text(encoding="utf-8"))
+            case_id = case_definition.get("id")
+            if case_definition.get("specification_id") != specification_id:
+                raise RuntimeError(
+                    f"Conformance case specification mismatch in {case_path}"
+                )
+            expected_case_id = f"{specification_id}.{case_path.stem}"
+            if case_id != expected_case_id:
+                raise RuntimeError(
+                    f"Conformance case ID mismatch in {case_path}: "
+                    f"expected {expected_case_id!r}, got {case_id!r}"
+                )
+            if case_id in seen_case_ids:
+                raise RuntimeError(f"Duplicate conformance case ID {case_id!r}")
+
+            has_outputs = "expected_outputs" in case_definition
+            has_error = "expected_error" in case_definition
+            if has_outputs == has_error:
+                raise RuntimeError(
+                    f"Conformance case {case_id!r} must define exactly one of "
+                    "expected_outputs or expected_error"
+                )
+            seen_case_ids.add(case_id)
+            discovered.append(case_definition)
+
+    return tuple(discovered)
+
+
+def cases_for_specification(specification_id: str) -> tuple[dict[str, Any], ...]:
+    """Return all discovered cases for one conformant specification."""
+
+    manifest_entry = load_manifest()["specifications"].get(specification_id)
+    if manifest_entry is None or manifest_entry["status"] != "conformant":
+        raise RuntimeError(
+            f"Specification {specification_id!r} is not declared conformant"
+        )
+    return tuple(
+        case
+        for case in discover_cases()
+        if case["specification_id"] == specification_id
+    )
+
+
+def case_id(case_definition: Mapping[str, Any]) -> str:
+    """Return the canonical ID used for a parametrized-test label."""
+
+    return str(case_definition["id"])
+
+
+def is_expected_error(case_definition: Mapping[str, Any]) -> bool:
+    """Classify a case from its Biosiglib definition."""
+
+    return "expected_error" in case_definition
+
+
+def missing_case_ids(
+    discovered_case_ids: set[str], collected_case_ids: set[str]
+) -> set[str]:
+    """Return discovered cases that are absent from the test collection."""
+
+    return discovered_case_ids - collected_case_ids
+
+
+def assert_complete_case_coverage(
+    discovered_case_ids: set[str], collected_case_ids: set[str]
+) -> None:
+    """Reject a test collection that omits any discovered case."""
+
+    missing = missing_case_ids(discovered_case_ids, collected_case_ids)
+    if missing:
+        formatted = ", ".join(sorted(missing))
+        raise RuntimeError(
+            "Discovered Biosiglib conformance cases were not collected: "
+            + formatted
+        )
 
 
 @lru_cache(maxsize=1)

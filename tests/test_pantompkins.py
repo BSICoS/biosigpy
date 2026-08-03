@@ -9,7 +9,9 @@ from biosigpy.ecg.pantompkins import pantompkins
 from conformance import (
     assert_expected_error,
     assert_expected_outputs,
-    load_case,
+    case_id,
+    cases_for_specification,
+    is_expected_error,
     load_input,
 )
 
@@ -17,19 +19,19 @@ from conformance import (
 PANTOMPKINS_MODULE = importlib.import_module("biosigpy.ecg.pantompkins")
 
 
-EXPECTED_ERROR_CASES = [
-    "ecg.pantompkins.invalid_sampling_frequency_non_positive",
-    "ecg.pantompkins.invalid_sampling_frequency_vector",
-    "ecg.pantompkins.invalid_sampling_frequency_non_numeric",
-    "ecg.pantompkins.invalid_ecg_matrix",
-    "ecg.pantompkins.invalid_ecg_non_numeric",
-]
-
-
-def test_positive_conformance() -> None:
-    case_definition = load_case("ecg.pantompkins.medicom_mtd_r_wave_times")
+@pytest.mark.parametrize(
+    "case_definition",
+    cases_for_specification("ecg.pantompkins"),
+    ids=case_id,
+)
+def test_conformance(case_definition: dict[str, object]) -> None:
     ecg = load_input(case_definition, "ecg")
     sampling_frequency = load_input(case_definition, "sampling_frequency")
+    if is_expected_error(case_definition):
+        assert_expected_error(
+            lambda: pantompkins(ecg, sampling_frequency), case_definition
+        )
+        return
 
     outputs = pantompkins(ecg, sampling_frequency)
 
@@ -45,17 +47,6 @@ def test_positive_conformance() -> None:
         assert output.ndim == 1
         assert output.shape == ecg.shape
     assert_expected_outputs(outputs, case_definition)
-
-
-@pytest.mark.parametrize("case_id", EXPECTED_ERROR_CASES)
-def test_expected_error_conformance(case_id: str) -> None:
-    case_definition = load_case(case_id)
-    ecg = load_input(case_definition, "ecg")
-    sampling_frequency = load_input(case_definition, "sampling_frequency")
-
-    assert_expected_error(
-        lambda: pantompkins(ecg, sampling_frequency), case_definition
-    )
 
 
 def test_filters_nan_refined_detections_before_r_wave_times(

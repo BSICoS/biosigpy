@@ -7,54 +7,36 @@ from biosigpy.tools.lpd_filter import lpd_filter
 from conformance import (
     assert_expected_error,
     assert_expected_outputs,
-    load_case,
+    case_id,
+    cases_for_specification,
+    is_expected_error,
     load_input,
 )
 
 
-VALID_CASES = [
-    "tools.lpd_filter.fs256_stop12_order4_coefficients",
-    "tools.lpd_filter.explicit_pass_frequency_order4_coefficients",
-]
-
-EXPECTED_ERROR_CASES = [
-    "tools.lpd_filter.invalid_pass_frequency_not_less_than_stop",
-    "tools.lpd_filter.invalid_stop_frequency_at_nyquist",
-]
-
-
-@pytest.mark.parametrize("case_id", VALID_CASES)
-def test_positive_conformance(case_id: str) -> None:
-    case_definition = load_case(case_id)
+@pytest.mark.parametrize(
+    "case_definition",
+    cases_for_specification("tools.lpd_filter"),
+    ids=case_id,
+)
+def test_conformance(case_definition: dict[str, object]) -> None:
     parameters = case_definition["parameters"]
-
-    filter_coefficients, delay = lpd_filter(
+    run_case = lambda: lpd_filter(
         load_input(case_definition, "sampling_frequency"),
         load_input(case_definition, "stop_frequency"),
         parameters.get("pass_frequency"),
         parameters.get("order"),
     )
+    if is_expected_error(case_definition):
+        assert_expected_error(run_case, case_definition)
+        return
+
+    filter_coefficients, delay = run_case()
 
     assert np.issubdtype(filter_coefficients.dtype, np.number)
     assert filter_coefficients.ndim == 1
     assert_expected_outputs(
         {"filter_coefficients": filter_coefficients, "delay": delay},
-        case_definition,
-    )
-
-
-@pytest.mark.parametrize("case_id", EXPECTED_ERROR_CASES)
-def test_expected_error_conformance(case_id: str) -> None:
-    case_definition = load_case(case_id)
-    parameters = case_definition["parameters"]
-
-    assert_expected_error(
-        lambda: lpd_filter(
-            load_input(case_definition, "sampling_frequency"),
-            load_input(case_definition, "stop_frequency"),
-            parameters.get("pass_frequency"),
-            parameters.get("order"),
-        ),
         case_definition,
     )
 

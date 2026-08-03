@@ -7,56 +7,35 @@ from biosigpy.tools.snap_to_peak import snap_to_peak
 from conformance import (
     assert_expected_error,
     assert_expected_outputs,
-    load_case,
+    case_id,
+    cases_for_specification,
+    is_expected_error,
     load_input,
 )
 
 
-VALID_CASES = [
-    "tools.snap_to_peak.local_maxima",
-    "tools.snap_to_peak.boundary_clipping",
-    "tools.snap_to_peak.configurable_window_small",
-    "tools.snap_to_peak.configurable_window_large",
-    "tools.snap_to_peak.ecg_nan_segment_boundary",
-    "tools.snap_to_peak.detection_nan_returns_nan",
-    "tools.snap_to_peak.detection_on_nan_ecg_returns_nan",
-]
-
-EXPECTED_ERROR_CASES = [
-    "tools.snap_to_peak.invalid_detection_out_of_bounds",
-]
-
-
-@pytest.mark.parametrize("case_id", VALID_CASES)
-def test_positive_conformance(case_id: str) -> None:
-    case_definition = load_case(case_id)
+@pytest.mark.parametrize(
+    "case_definition",
+    cases_for_specification("tools.snap_to_peak"),
+    ids=case_id,
+)
+def test_conformance(case_definition: dict[str, object]) -> None:
     parameters = case_definition["parameters"]
-
-    refined_detections = snap_to_peak(
+    run_case = lambda: snap_to_peak(
         load_input(case_definition, "ecg"),
         load_input(case_definition, "detections"),
         parameters.get("window_size", 20),
     )
+    if is_expected_error(case_definition):
+        assert_expected_error(run_case, case_definition)
+        return
+
+    refined_detections = run_case()
 
     assert np.issubdtype(refined_detections.dtype, np.number)
     assert refined_detections.ndim == 1
     assert_expected_outputs(
         {"refined_detections": refined_detections}, case_definition
-    )
-
-
-@pytest.mark.parametrize("case_id", EXPECTED_ERROR_CASES)
-def test_expected_error_conformance(case_id: str) -> None:
-    case_definition = load_case(case_id)
-    parameters = case_definition["parameters"]
-
-    assert_expected_error(
-        lambda: snap_to_peak(
-            load_input(case_definition, "ecg"),
-            load_input(case_definition, "detections"),
-            parameters.get("window_size", 20),
-        ),
-        case_definition,
     )
 
 

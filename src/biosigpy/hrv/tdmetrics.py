@@ -19,7 +19,9 @@ def tdmetrics(dtk: ArrayLike) -> dict[str, float]:
     -------
     dict[str, float]
         Dictionary containing ``mhr`` in beats/min, ``sdnn`` in ms, ``sdsd``
-        in ms, ``rmssd`` in ms, and ``pnn50`` in percent.
+        in ms, ``rmssd`` in ms, and ``pnn50`` in percent. A metric is ``NaN``
+        when too few valid intervals exist to define it. An input containing
+        only ``NaN`` markers returns ``NaN`` for every metric.
 
     Raises
     ------
@@ -27,7 +29,7 @@ def tdmetrics(dtk: ArrayLike) -> dict[str, float]:
         If ``dtk`` is not real numeric data.
     ValueError
         If ``dtk`` is empty, is not one-dimensional, contains infinite,
-        zero, or negative values, or has fewer than two finite intervals.
+        zero, or negative values.
 
     Notes
     -----
@@ -53,24 +55,42 @@ def tdmetrics(dtk: ArrayLike) -> dict[str, float]:
         raise ValueError("dtk values must be positive or NaN")
 
     valid_intervals = intervals[~np.isnan(intervals)]
-    if valid_intervals.size < 2:
-        raise ValueError("dtk must contain at least two valid intervals")
+    if valid_intervals.size == 0:
+        return {
+            metric: float("nan")
+            for metric in ("mhr", "sdnn", "sdsd", "rmssd", "pnn50")
+        }
 
     successive_interval_differences = np.diff(valid_intervals)
-    return {
-        "mhr": float(60.0 / np.mean(valid_intervals)),
-        "sdnn": float(1000.0 * np.std(valid_intervals, ddof=1)),
-        "sdsd": float(
-            1000.0 * np.std(successive_interval_differences, ddof=1)
-        ),
-        "rmssd": float(
+    sdnn = (
+        float(1000.0 * np.std(valid_intervals, ddof=1))
+        if valid_intervals.size >= 2
+        else float("nan")
+    )
+    sdsd = (
+        float(1000.0 * np.std(successive_interval_differences, ddof=1))
+        if successive_interval_differences.size >= 2
+        else float("nan")
+    )
+    if successive_interval_differences.size >= 1:
+        rmssd = float(
             1000.0 * np.sqrt(np.mean(successive_interval_differences**2))
-        ),
-        "pnn50": float(
+        )
+        pnn50 = float(
             100.0
             * np.count_nonzero(np.abs(successive_interval_differences) > 0.05)
             / successive_interval_differences.size
-        ),
+        )
+    else:
+        rmssd = float("nan")
+        pnn50 = float("nan")
+
+    return {
+        "mhr": float(60.0 / np.mean(valid_intervals)),
+        "sdnn": sdnn,
+        "sdsd": sdsd,
+        "rmssd": rmssd,
+        "pnn50": pnn50,
     }
 
 
