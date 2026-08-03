@@ -12,6 +12,7 @@ python -m pip install -e ".[examples]"
 
 - [HRV time-domain metrics](hrv-tdmetrics.md)
 - [ECG Pan-Tompkins R-wave detection](ecg-pantompkins.md)
+- [ECG slope-range respiration](ecg-sloperange.md)
 
 Examples that generate figures open an interactive Matplotlib window when an
 interactive backend is available. In non-interactive environments, pass
