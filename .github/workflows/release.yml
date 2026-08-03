@@ -1,0 +1,95 @@
+name: Publish release
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out tagged source
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Verify tag and release notes
+        env:
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          python - <<'PY'
+          import os
+          import runpy
+          from pathlib import Path
+
+          version = runpy.run_path("src/biosigpy/_version.py")["__version__"]
+          expected_tag = f"v{version}"
+          actual_tag = os.environ["RELEASE_TAG"]
+          if actual_tag != expected_tag:
+              raise SystemExit(f"Tag {actual_tag!r} does not match {expected_tag!r}")
+          notes = Path("docs/releases") / f"{actual_tag}.md"
+          if not notes.is_file():
+              raise SystemExit(f"Missing release notes: {notes}")
+          PY
+
+      - name: Build wheel and source distribution
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install "build>=1.2,<2"
+          python -m build
+
+      - name: Verify source distribution contents
+        run: |
+          python - <<'PY'
+          import tarfile
+          from pathlib import Path
+
+          archives = list(Path("dist").glob("*.tar.gz"))
+          if len(archives) != 1:
+              raise SystemExit(f"Expected one source distribution, found {archives}")
+          version = archives[0].name.removeprefix("biosigpy-").removesuffix(".tar.gz")
+          with tarfile.open(archives[0], "r:gz") as archive:
+              members = {Path(name).as_posix() for name in archive.getnames()}
+          suffixes = {
+              "conformance.json",
+              "docs/changelog.md",
+              "docs/releasing.md",
+              f"docs/releases/v{version}.md",
+              "tests/conftest.py",
+              "tests/conformance.py",
+          }
+          missing = [suffix for suffix in suffixes if not any(name.endswith(suffix) for name in members)]
+          if missing:
+              raise SystemExit(f"Source distribution is missing: {missing}")
+          PY
+
+      - name: Smoke-test wheel in a clean environment
+        run: |
+          python -m venv .release-wheel
+          .release-wheel/bin/python -m pip install --upgrade pip
+          .release-wheel/bin/python -m pip install dist/*.whl
+          .release-wheel/bin/python -c "from importlib.metadata import version; import biosigpy; assert version('biosigpy') == biosigpy.__version__; assert callable(biosigpy.sloperange)"
+
+      - name: Smoke-test source distribution in a clean environment
+        run: |
+          python -m venv .release-sdist
+          .release-sdist/bin/python -m pip install --upgrade pip
+          .release-sdist/bin/python -m pip install dist/*.tar.gz
+          .release-sdist/bin/python -c "from importlib.metadata import version; import biosigpy; assert version('biosigpy') == biosigpy.__version__; assert callable(biosigpy.tdmetrics)"
+
+      - name: Record artifact checksums
+        run: |
+          sha256sum dist/*.whl dist/*.tar.gz > SHA256SUMS
+          mv SHA256SUMS dist/SHA256SUMS
+
+      - name: Publish GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "$GITHUB_REF_NAME" dist/* --verify-tag --title "Biosigpy $GITHUB_REF_NAME" --notes-file "docs/releases/$GITHUB_REF_NAME.md"

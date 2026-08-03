@@ -1,5 +1,1 @@
-numpy
-scipy
-matplotlib
-pytest
-jsonschema
+-e .[dev]

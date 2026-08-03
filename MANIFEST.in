@@ -1,0 +1,7 @@
+include conformance.json
+include mkdocs.yml
+include pytest.ini
+include requirements-dev.txt
+recursive-include docs *.md
+recursive-include examples *.csv *.md *.py
+recursive-include tests *.py

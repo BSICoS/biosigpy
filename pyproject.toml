@@ -1,19 +1,32 @@
 [build-system]
-requires = ["setuptools>=77"]
+requires = ["setuptools>=77,<82"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "biosigpy"
-version = "0.0.0"
+dynamic = ["version"]
 description = "Python implementation of the Biosiglib specifications for biomedical signal processing."
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.10,<3.14"
 license = "GPL-3.0-only"
 license-files = ["LICENSE"]
 dependencies = [
-    "numpy",
-    "scipy",
+    "numpy>=1.26.4",
+    "scipy>=1.11.4",
 ]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+]
+
+[project.urls]
+Documentation = "https://bsicos.github.io/biosigpy/"
+Issues = "https://github.com/BSICoS/biosigpy/issues"
+Repository = "https://github.com/BSICoS/biosigpy"
 
 [project.optional-dependencies]
 examples = [
@@ -21,9 +34,9 @@ examples = [
     "PyQt6",
 ]
 dev = [
+    "build>=1.2,<2",
     "jsonschema",
     "matplotlib",
-    "PyQt6",
     "pytest",
 ]
 docs = [
@@ -37,3 +50,6 @@ docs = [
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.setuptools.dynamic]
+version = {attr = "biosigpy._version.__version__"}

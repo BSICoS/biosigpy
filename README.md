@@ -1,9 +1,9 @@
 # biosigpy - Biomedical Signal Processing Library for Python
 
-[![Python](https://img.shields.io/badge/Python-3.10%2B-blue)](https://www.python.org/)
+[![Python](https://img.shields.io/badge/Python-3.10--3.13-blue)](https://www.python.org/)
 [![License](https://img.shields.io/badge/License-GPL--3.0-green.svg)](LICENSE)
 [![Tests](https://img.shields.io/badge/Tests-Passing-brightgreen)](tests/)
-[![Version](https://img.shields.io/badge/Version-0.0.0-orange)](pyproject.toml)
+[![Version](https://img.shields.io/badge/Version-0.1.0-orange)](src/biosigpy/_version.py)
 
 Python implementation of the language-independent [Biosiglib](https://github.com/BSICoS/biosiglib) specifications for biomedical signal processing.
 
@@ -15,7 +15,15 @@ Python implementation of the language-independent [Biosiglib](https://github.com
 
 ## Installation
 
-Biosigpy is currently installed from the repository source tree:
+Biosigpy 0.1.0 is distributed as a wheel and source archive on the
+[GitHub release](https://github.com/BSICoS/biosigpy/releases/tag/v0.1.0). Download
+one of the release artifacts and install it with pip, for example:
+
+```bash
+python -m pip install biosigpy-0.1.0-py3-none-any.whl
+```
+
+For development, install from the repository source tree:
 
 ```bash
 git clone https://github.com/BSICoS/biosigpy.git
@@ -23,9 +31,14 @@ cd biosigpy
 python -m venv .venv
 source .venv/bin/activate
 python -m pip install --upgrade pip
+python -m pip install -e ".[dev]"
 ```
 
 See [Installation](docs/getting-started/installation.md) for Windows PowerShell activation, development extras, and documentation build setup.
+
+The supported runtime range is Python 3.10-3.13 with NumPy 1.26.4 or newer and
+SciPy 1.11.4 or newer. Query the installed implementation version with
+`importlib.metadata.version("biosigpy")` or `biosigpy.__version__`.
 
 ## Biosiglib conformance
 
