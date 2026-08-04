@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 0.2.0 - 2026-08-04
+
 - Implemented the Biosiglib `hrv.removefp` contract with strict input order,
   fixed adaptive-baseline settings, and simultaneous one-pass removal.
 - Implemented the Biosiglib `hrv.fillgaps` contract with a named two-field

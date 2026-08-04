@@ -3,7 +3,7 @@
 [![Python](https://img.shields.io/badge/Python-3.10--3.13-blue)](https://www.python.org/)
 [![License](https://img.shields.io/badge/License-GPL--3.0-green.svg)](LICENSE)
 [![Tests](https://img.shields.io/badge/Tests-Passing-brightgreen)](tests/)
-[![Version](https://img.shields.io/badge/Version-0.1.0-orange)](src/biosigpy/_version.py)
+[![Version](https://img.shields.io/badge/Version-0.2.0-orange)](src/biosigpy/_version.py)
 
 Python implementation of the language-independent [Biosiglib](https://github.com/BSICoS/biosiglib) specifications for biomedical signal processing.
 
@@ -15,12 +15,12 @@ Python implementation of the language-independent [Biosiglib](https://github.com
 
 ## Installation
 
-Biosigpy 0.1.0 is distributed as a wheel and source archive on the
-[GitHub release](https://github.com/BSICoS/biosigpy/releases/tag/v0.1.0). Download
+Biosigpy 0.2.0 is distributed as a wheel and source archive on the
+[GitHub release](https://github.com/BSICoS/biosigpy/releases/tag/v0.2.0). Download
 one of the release artifacts and install it with pip, for example:
 
 ```bash
-python -m pip install biosigpy-0.1.0-py3-none-any.whl
+python -m pip install biosigpy-0.2.0-py3-none-any.whl
 ```
 
 For development, install from the repository source tree:
