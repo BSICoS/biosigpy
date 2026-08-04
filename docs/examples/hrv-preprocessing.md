@@ -2,11 +2,10 @@
 
 Script: `examples/hrv/preprocessing_example.py`
 
-This synthetic example inserts a false-positive event and removes several true
-events. It applies the recommended explicit sequence, first `removefp` and then
-`fillgaps`, and plots the event timestamps and interval series before and after
-correction. The numerical functions have no GUI side effects; plotting belongs
-only to this example.
+This synthetic example inserts a false-positive event and applies `removefp`.
+It plots the event timestamps and interval series before and after removing the
+false-positive detection. The numerical function has no GUI side effects;
+plotting belongs only to this example.
 
 Run it from the repository root:
 
