@@ -4,15 +4,11 @@
 
 - Implemented the Biosiglib `hrv.removefp` contract with strict input order,
   fixed adaptive-baseline settings, and simultaneous one-pass removal.
-- Implemented the Biosiglib `hrv.fillgaps` contract with a named two-field
-  result, configurable canonical parameters, segment-wide iterative PCHIP
-  reconstruction, exact duration preservation, over-insertion fallback, and
-  NaN-marked unresolved gaps.
 - Added automatic shared-case coverage, Python-native API tests, public
-  re-exports, API documentation, and an executable visual HRV preprocessing
+  re-exports, API documentation, and a dedicated executable `removefp`
   example.
-- Pinned conformance to Biosiglib v1.2.1 at commit
-  `050a0527741415d4099ed6e2d8ba873fc76cf577`.
+- Pinned conformance to Biosiglib v1.1.0 at commit
+  `d8833986ebfd54dcf952195b11397f5fb679367e`.
 
 ## 0.1.0 - 2026-08-03
 
