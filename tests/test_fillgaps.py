@@ -63,4 +63,3 @@ def test_fillgaps_does_not_remove_close_events_implicitly() -> None:
 def test_invalid_parameters_are_rejected(parameters: dict[str, float]) -> None:
     with pytest.raises(ValueError):
         fillgaps([0, 1, 2], **parameters)
-
