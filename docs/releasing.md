@@ -22,7 +22,9 @@ this procedure.
 8. Merge the reviewed release PR into `main` and wait for all `main` checks.
 9. Create an annotated `vX.Y.Z` tag on that exact merge commit and push it.
 10. Verify that the release workflow uploads the wheel, source archive, and
-    `SHA256SUMS`, and that the GitHub Release uses the committed release notes.
+    `SHA256SUMS`, that the checksum entries use release-asset basenames so
+    `sha256sum --check SHA256SUMS` works in the download directory, and that
+    the GitHub Release uses the committed release notes.
 
 The tag-triggered workflow rejects a tag whose name does not match the package
 version and performs both clean installation smoke tests before publishing.

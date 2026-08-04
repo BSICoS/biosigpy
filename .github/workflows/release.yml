@@ -86,8 +86,9 @@ jobs:
 
       - name: Record artifact checksums
         run: |
-          sha256sum dist/*.whl dist/*.tar.gz > SHA256SUMS
-          mv SHA256SUMS dist/SHA256SUMS
+          cd dist
+          sha256sum *.whl *.tar.gz > SHA256SUMS
+          sha256sum --check SHA256SUMS
 
       - name: Publish GitHub release
         env:
