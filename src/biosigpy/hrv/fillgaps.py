@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import NamedTuple
+from typing import TYPE_CHECKING, NamedTuple
 
 import numpy as np
 from numpy.typing import ArrayLike, NDArray
@@ -13,6 +13,9 @@ from biosigpy.tools._validation import (
     as_positive_real_scalar,
     as_real_vector,
 )
+
+if TYPE_CHECKING:
+    from biosigpy.hrv._fillgaps_debug import FillGapsDebugger
 
 
 __all__ = ["FillGapsResult", "fillgaps"]
@@ -42,6 +45,7 @@ def fillgaps(
     correction_lower_factor: float = 0.75,
     minimum_interval: float = 0.5,
     max_gap_duration: float = 10.0,
+    debug: bool = False,
 ) -> FillGapsResult:
     """Reconstruct missing event timestamps inside locally detected gaps.
 
@@ -62,6 +66,11 @@ def fillgaps(
     max_gap_duration : float, default=10.0
         Positive maximum gap duration attempted for reconstruction, in
         seconds.
+    debug : bool, default=False
+        When true, show the current gaps and every reconstruction attempt in
+        an interactive figure. Accepted attempts are green, rejected attempts
+        are red, and execution waits for a key press or mouse click after each
+        attempt. The figure closes when processing finishes.
 
     Returns
     -------
@@ -82,8 +91,9 @@ def fillgaps(
     -----
     This function never calls :func:`biosigpy.hrv.removefp` implicitly. The
     recommended explicit preprocessing sequence is ``removefp(tk)`` followed
-    by ``fillgaps(cleaned_tk)``. Reconstruction has no plotting or other GUI
-    side effects.
+    by ``fillgaps(cleaned_tk)``. Normal calls have no plotting or other GUI
+    side effects. Interactive inspection is enabled only by ``debug=True``
+    and requires Matplotlib with an interactive backend.
 
     Examples
     --------
@@ -109,6 +119,7 @@ def fillgaps(
     max_gap_duration = as_positive_real_scalar(
         max_gap_duration, name="max_gap_duration"
     )
+    debug = _as_boolean(debug, name="debug")
     if not (
         correction_lower_factor
         < correction_upper_factor
@@ -121,6 +132,38 @@ def fillgaps(
 
     if events.size < 3:
         return FillGapsResult(events.copy(), np.diff(events))
+
+    debugger: FillGapsDebugger | None = None
+    try:
+        if debug:
+            from biosigpy.hrv._fillgaps_debug import FillGapsDebugger
+
+            debugger = FillGapsDebugger()
+        return _fillgaps_validated(
+            events,
+            gap_detection_factor=gap_detection_factor,
+            correction_upper_factor=correction_upper_factor,
+            correction_lower_factor=correction_lower_factor,
+            minimum_interval=minimum_interval,
+            max_gap_duration=max_gap_duration,
+            debugger=debugger,
+        )
+    finally:
+        if debugger is not None:
+            debugger.close()
+
+
+def _fillgaps_validated(
+    events: NDArray[np.float64],
+    *,
+    gap_detection_factor: float,
+    correction_upper_factor: float,
+    correction_lower_factor: float,
+    minimum_interval: float,
+    max_gap_duration: float,
+    debugger: FillGapsDebugger | None,
+) -> FillGapsResult:
+    """Run the numerical algorithm after public inputs are validated."""
 
     corrected = events.copy()
     unresolved_pairs: set[tuple[float, float]] = set()
@@ -170,6 +213,17 @@ def fillgaps(
             candidate_pairs.append(pair)
             baseline_at_gap[pair] = float(baseline[gap_index])
 
+        if debugger is not None and candidate_pairs:
+            debugger.overview(
+                intervals,
+                np.asarray(
+                    [pair_to_index[pair] for pair in candidate_pairs],
+                    dtype=np.int64,
+                ),
+                gap_detection_factor * baseline,
+                insertion_count,
+            )
+
         for candidate_number, pair in enumerate(candidate_pairs):
             current_intervals = np.diff(corrected)
             current_pairs = [
@@ -204,23 +258,48 @@ def fillgaps(
                 minimum_interval,
             )
             upper_boundary = correction_upper_factor * baseline_at_gap[pair]
+            correct = bool(np.all(reconstruction < upper_boundary))
+            limit_exceeded = bool(
+                np.all(reconstruction < lower_boundary)
+            )
+            candidate_events = _apply_reconstructions(
+                corrected, {pair: reconstruction}
+            )
 
-            if np.all(reconstruction < lower_boundary):
+            if debugger is not None:
+                debugger.attempt(
+                    np.diff(candidate_events),
+                    gap_index,
+                    insertion_count,
+                    upper_boundary,
+                    lower_boundary,
+                    accepted=correct and not limit_exceeded,
+                )
+
+            if limit_exceeded:
                 if insertion_count == 1:
                     unresolved_pairs.add(pair)
                 else:
                     previous = _reconstruct_intervals(
                         support, gap_duration, insertion_count - 1
                     )
-                    corrected = _apply_reconstructions(
+                    previous_events = _apply_reconstructions(
                         corrected, {pair: previous}
                     )
+                    if debugger is not None:
+                        debugger.attempt(
+                            np.diff(previous_events),
+                            gap_index,
+                            insertion_count - 1,
+                            upper_boundary,
+                            lower_boundary,
+                            accepted=True,
+                        )
+                    corrected = previous_events
                 continue
 
-            if np.all(reconstruction < upper_boundary):
-                corrected = _apply_reconstructions(
-                    corrected, {pair: reconstruction}
-                )
+            if correct:
+                corrected = candidate_events
                 continue
 
         # Every candidate is attempted with the same insertion count before
@@ -263,6 +342,12 @@ def _as_nonnegative_real_scalar(value: float, *, name: str) -> float:
     if not np.isfinite(scalar) or scalar < 0:
         raise ValueError(f"{name} must be finite and non-negative")
     return scalar
+
+
+def _as_boolean(value: bool, *, name: str) -> bool:
+    if not isinstance(value, (bool, np.bool_)):
+        raise TypeError(f"{name} must be a boolean")
+    return bool(value)
 
 
 def _interpolation_support(

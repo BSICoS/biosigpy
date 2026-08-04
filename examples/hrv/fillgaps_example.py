@@ -22,6 +22,11 @@ from _support.figures import add_save_figure_argument, show_or_save_figure
 
 def _parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--debug",
+        action="store_true",
+        help="pause after every interactive reconstruction attempt",
+    )
     add_save_figure_argument(parser)
     return parser.parse_args()
 
@@ -30,7 +35,7 @@ def main() -> None:
     args = _parse_args()
     reference = np.arange(0.0, 24.8, 0.8)
     with_gaps = np.delete(reference, [10, 11, 22])
-    corrected = fillgaps(with_gaps)
+    corrected = fillgaps(with_gaps, debug=args.debug)
 
     print("HRV missing-event reconstruction:")
     print("=================================")
