@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import csv
 import sys
 from pathlib import Path
 
@@ -20,16 +21,45 @@ if str(EXAMPLES_ROOT) not in sys.path:
 from _support.figures import add_save_figure_argument, show_or_save_figure
 
 
+TIMING_FIXTURE_PATH = (
+    REPOSITORY_ROOT
+    / "examples"
+    / "fixtures"
+    / "ecg"
+    / "medicom_mtd_r_wave_timing.csv"
+)
+MATLAB_FP_INDICES_ONE_BASED = np.asarray([10, 20, 30])
+FP_OFFSETS = np.asarray([0.05, 0.08, 0.06])
+
+
 def _parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     add_save_figure_argument(parser)
     return parser.parse_args()
 
 
+def _load_r_wave_times() -> np.ndarray:
+    with TIMING_FIXTURE_PATH.open(newline="", encoding="utf-8") as csv_file:
+        reader = csv.DictReader(csv_file)
+        if (
+            reader.fieldnames is None
+            or "r_wave_times" not in reader.fieldnames
+        ):
+            raise RuntimeError(
+                f"Column 'r_wave_times' not found in {TIMING_FIXTURE_PATH}"
+            )
+        return np.asarray(
+            [float(row["r_wave_times"]) for row in reader],
+            dtype=np.float64,
+        )
+
+
 def main() -> None:
     args = _parse_args()
-    reference = np.arange(0.0, 24.8, 0.8)
-    observed = np.sort(np.append(reference, reference[5] + 0.12))
+    reference = _load_r_wave_times()[:50]
+    fp_indices = MATLAB_FP_INDICES_ONE_BASED - 1
+    false_positives = reference[fp_indices] + FP_OFFSETS
+    observed = np.sort(np.concatenate((reference, false_positives)))
 
     cleaned = removefp(observed)
 

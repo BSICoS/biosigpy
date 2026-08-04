@@ -2,10 +2,11 @@
 
 Script: `examples/hrv/fillgaps_example.py`
 
-This example removes true events from a regular reference series and applies
-`fillgaps` to the already false-positive-free timestamps. It compares the
-reference intervals with the reconstructed intervals. Normal calls to
-`fillgaps` have no GUI side effects.
+This example loads the first 100 event times from the same
+`medicom_mtd_r_wave_timing.csv` fixture as Biosigmat. It removes the exact
+detections selected by MATLAB with `rng(40)`, applies the explicit `removefp`
+then `fillgaps` sequence, and compares the reference intervals with the
+reconstructed intervals. Normal calls to `fillgaps` have no GUI side effects.
 
 Run it from the repository root:
 
