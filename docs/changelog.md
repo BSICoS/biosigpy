@@ -8,6 +8,11 @@
   result, configurable empirical thresholds, segment-wide iterative PCHIP
   reconstruction, exact duration preservation, over-insertion fallback, and
   NaN-marked unresolved gaps.
+- Added optional interactive `fillgaps` debugging that displays every
+  reconstruction attempt and waits for explicit user inspection without
+  changing normative results or affecting normal calls.
+- Aligned the Python `removefp` and `fillgaps` examples with the identical
+  Medicom MTD timing fixture and transformations used by Biosigmat.
 - Added automatic shared-case coverage, Python-native API tests, public
   re-exports, API documentation, and dedicated executable examples for
   `removefp` and `fillgaps`.

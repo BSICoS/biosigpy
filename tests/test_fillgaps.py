@@ -50,6 +50,55 @@ def test_fillgaps_does_not_remove_close_events_implicitly() -> None:
     assert all(event in result.tn for event in tk)
 
 
+def test_interactive_debug_shows_each_attempt_without_changing_results(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    import matplotlib
+
+    matplotlib.use("Agg", force=True)
+    import matplotlib.pyplot as plt
+    from biosigpy.hrv import _fillgaps_debug
+
+    pauses: list[int] = []
+    monkeypatch.setattr(
+        _fillgaps_debug,
+        "_is_interactive_backend",
+        lambda _backend: True,
+    )
+    monkeypatch.setattr(
+        plt,
+        "waitforbuttonpress",
+        lambda **_kwargs: pauses.append(1),
+    )
+    tk = np.asarray(
+        [0, 0.4, 1.1, 2.4, 2.9, 3.55], dtype=np.float64
+    )
+    expected = fillgaps(tk)
+
+    actual = fillgaps(tk, debug=True)
+
+    np.testing.assert_array_equal(actual.tn, expected.tn)
+    np.testing.assert_array_equal(actual.dtn, expected.dtn)
+    # One rejected single-insertion attempt, one rejected over-insertion,
+    # and the retained preceding reconstruction are each inspected.
+    assert pauses == [1, 1, 1]
+    assert "fillgaps interactive debug" not in plt.get_figlabels()
+
+
+def test_debug_must_be_boolean() -> None:
+    with pytest.raises(TypeError, match="debug must be a boolean"):
+        fillgaps([0, 1, 2], debug=1)
+
+
+def test_debug_requires_an_interactive_backend() -> None:
+    import matplotlib
+
+    matplotlib.use("Agg", force=True)
+
+    with pytest.raises(RuntimeError, match="interactive Matplotlib backend"):
+        fillgaps([0, 1, 2, 4, 5, 6], debug=True)
+
+
 @pytest.mark.parametrize(
     "parameters",
     (
