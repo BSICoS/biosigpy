@@ -5,7 +5,7 @@
 - Implemented the Biosiglib `hrv.removefp` contract with strict input order,
   fixed adaptive-baseline settings, and simultaneous one-pass removal.
 - Added automatic shared-case coverage, Python-native API tests, public
-  re-exports, API documentation, and an executable visual HRV preprocessing
+  re-exports, API documentation, and a dedicated executable `removefp`
   example.
 - Pinned conformance to Biosiglib v1.1.0 at commit
   `d8833986ebfd54dcf952195b11397f5fb679367e`.

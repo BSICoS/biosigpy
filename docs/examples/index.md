@@ -10,7 +10,7 @@ python -m pip install -e ".[examples]"
 
 ## Available examples
 
-- [HRV event preprocessing](hrv-preprocessing.md)
+- [HRV false-positive removal](hrv-removefp.md)
 - [HRV time-domain metrics](hrv-tdmetrics.md)
 - [ECG Pan-Tompkins R-wave detection](ecg-pantompkins.md)
 - [ECG slope-range respiration](ecg-sloperange.md)

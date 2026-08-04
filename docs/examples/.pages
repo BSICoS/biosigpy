@@ -1,7 +1,7 @@
 title: Examples
 arrange:
   - index.md
-  - hrv-preprocessing.md
+  - hrv-removefp.md
   - hrv-tdmetrics.md
   - ecg-pantompkins.md
   - ecg-sloperange.md

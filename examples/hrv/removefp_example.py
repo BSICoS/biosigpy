@@ -1,4 +1,4 @@
-"""Visualize false-positive event removal."""
+"""Demonstrate false-positive event removal."""
 
 from __future__ import annotations
 
