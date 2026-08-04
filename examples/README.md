@@ -15,6 +15,7 @@ Run examples from the repository root:
 ```bash
 python examples/hrv/tdmetrics_example.py
 python examples/hrv/removefp_example.py
+python examples/hrv/fillgaps_example.py
 python examples/ecg/pantompkins_example.py
 python examples/ecg/sloperange_example.py
 ```
@@ -24,6 +25,7 @@ On Windows PowerShell:
 ```powershell
 python examples\hrv\tdmetrics_example.py
 python examples\hrv\removefp_example.py
+python examples\hrv\fillgaps_example.py
 python examples\ecg\pantompkins_example.py
 python examples\ecg\sloperange_example.py
 ```
@@ -66,6 +68,7 @@ For local validation:
 python -m pip install -e ".[dev]"
 python examples/hrv/tdmetrics_example.py
 MPLBACKEND=Agg python examples/hrv/removefp_example.py --save-figure /tmp/hrv_removefp_example.png
+MPLBACKEND=Agg python examples/hrv/fillgaps_example.py --save-figure /tmp/hrv_fillgaps_example.png
 MPLBACKEND=Agg python examples/ecg/pantompkins_example.py --save-figure /tmp/pantompkins_example.png
 MPLBACKEND=Agg python examples/ecg/sloperange_example.py --save-figure /tmp/sloperange_example.png
 python -m pytest
