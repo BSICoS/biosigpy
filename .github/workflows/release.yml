@@ -75,14 +75,14 @@ jobs:
           python -m venv .release-wheel
           .release-wheel/bin/python -m pip install --upgrade pip
           .release-wheel/bin/python -m pip install dist/*.whl
-          .release-wheel/bin/python -c "from importlib.metadata import version; import biosigpy; assert version('biosigpy') == biosigpy.__version__; assert callable(biosigpy.sloperange)"
+          .release-wheel/bin/python -c "from importlib.metadata import version; import biosigpy; assert version('biosigpy') == biosigpy.__version__; assert callable(biosigpy.removefp); assert callable(biosigpy.fillgaps); assert callable(biosigpy.sloperange)"
 
       - name: Smoke-test source distribution in a clean environment
         run: |
           python -m venv .release-sdist
           .release-sdist/bin/python -m pip install --upgrade pip
           .release-sdist/bin/python -m pip install dist/*.tar.gz
-          .release-sdist/bin/python -c "from importlib.metadata import version; import biosigpy; assert version('biosigpy') == biosigpy.__version__; assert callable(biosigpy.tdmetrics)"
+          .release-sdist/bin/python -c "from importlib.metadata import version; import biosigpy; assert version('biosigpy') == biosigpy.__version__; assert callable(biosigpy.removefp); assert callable(biosigpy.fillgaps); assert callable(biosigpy.tdmetrics)"
 
       - name: Record artifact checksums
         run: |

@@ -2,25 +2,25 @@
 
 ## Supported runtime
 
-Biosigpy 0.1.0 supports Python 3.10 through 3.13, NumPy 1.26.4 or newer, and
+Biosigpy 0.2.0 supports Python 3.10 through 3.13, NumPy 1.26.4 or newer, and
 SciPy 1.11.4 or newer. CI runs the complete conformance suite on every supported
 Python version and also tests the minimum NumPy/SciPy pair on Python 3.10.
 
 ## Install a release artifact
 
 Download the wheel or source archive and `SHA256SUMS` from the
-[v0.1.0 GitHub release](https://github.com/BSICoS/biosigpy/releases/tag/v0.1.0).
+[v0.2.0 GitHub release](https://github.com/BSICoS/biosigpy/releases/tag/v0.2.0).
 After checking the recorded hash, install either artifact in a virtual
 environment:
 
 ```bash
-python -m pip install biosigpy-0.1.0-py3-none-any.whl
+python -m pip install biosigpy-0.2.0-py3-none-any.whl
 ```
 
 The source archive is installed in the same way:
 
 ```bash
-python -m pip install biosigpy-0.1.0.tar.gz
+python -m pip install biosigpy-0.2.0.tar.gz
 ```
 
 Confirm the installed implementation version programmatically:
@@ -30,7 +30,7 @@ from importlib.metadata import version
 
 import biosigpy
 
-assert version("biosigpy") == biosigpy.__version__ == "0.1.0"
+assert version("biosigpy") == biosigpy.__version__ == "0.2.0"
 ```
 
 ## Development checkout
