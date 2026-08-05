@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Added dedicated HRV and ECG module overviews linking every conformant
+  function and its executable example, following the Biosigmat structure.
 - Implemented the sampled Biosiglib `hrv.ipfm` contract with the canonical
   edge-stabilized B-spline, uniform output grid, and optional TVIPFM signal.
 - Consumed all six shared `hrv.ipfm` cases directly from Biosiglib, including
