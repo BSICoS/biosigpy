@@ -4,14 +4,17 @@ from biosigpy._version import __version__
 from biosigpy.ecg.pantompkins import pantompkins
 from biosigpy.ecg.sloperange import SlopeRangeResult, sloperange
 from biosigpy.hrv.fillgaps import FillGapsResult, fillgaps
+from biosigpy.hrv.ipfm import IpfmResult, ipfm
 from biosigpy.hrv.removefp import removefp
 from biosigpy.hrv.tdmetrics import tdmetrics
 
 __all__ = [
     "FillGapsResult",
+    "IpfmResult",
     "SlopeRangeResult",
     "__version__",
     "fillgaps",
+    "ipfm",
     "pantompkins",
     "removefp",
     "sloperange",

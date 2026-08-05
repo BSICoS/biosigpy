@@ -255,6 +255,7 @@ def assert_expected_error(
         "invalid_shape": ValueError,
         "invalid_value": ValueError,
         "insufficient_data": ValueError,
+        "invalid_numerical_result": ValueError,
     }
     with pytest.raises(exception_types[category]):
         function()

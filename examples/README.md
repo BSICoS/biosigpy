@@ -16,6 +16,7 @@ Run examples from the repository root:
 python examples/hrv/tdmetrics_example.py
 python examples/hrv/removefp_example.py
 python examples/hrv/fillgaps_example.py
+python examples/hrv/ipfm_example.py
 python examples/ecg/pantompkins_example.py
 python examples/ecg/sloperange_example.py
 ```
@@ -26,6 +27,7 @@ On Windows PowerShell:
 python examples\hrv\tdmetrics_example.py
 python examples\hrv\removefp_example.py
 python examples\hrv\fillgaps_example.py
+python examples\hrv\ipfm_example.py
 python examples\ecg\pantompkins_example.py
 python examples\ecg\sloperange_example.py
 ```
@@ -49,6 +51,7 @@ On Windows PowerShell:
 $env:MPLBACKEND = "Agg"
 python examples\ecg\pantompkins_example.py --save-figure "$env:TEMP\pantompkins_example.png"
 python examples\ecg\sloperange_example.py --save-figure "$env:TEMP\sloperange_example.png"
+python examples\hrv\ipfm_example.py --save-figure "$env:TEMP\hrv_ipfm_example.png"
 Remove-Item Env:\MPLBACKEND
 ```
 
@@ -69,6 +72,7 @@ python -m pip install -e ".[dev]"
 python examples/hrv/tdmetrics_example.py
 MPLBACKEND=Agg python examples/hrv/removefp_example.py --save-figure /tmp/hrv_removefp_example.png
 MPLBACKEND=Agg python examples/hrv/fillgaps_example.py --save-figure /tmp/hrv_fillgaps_example.png
+MPLBACKEND=Agg python examples/hrv/ipfm_example.py --save-figure /tmp/hrv_ipfm_example.png
 MPLBACKEND=Agg python examples/ecg/pantompkins_example.py --save-figure /tmp/pantompkins_example.png
 MPLBACKEND=Agg python examples/ecg/sloperange_example.py --save-figure /tmp/sloperange_example.png
 python -m pytest

@@ -5,6 +5,7 @@
 - ECG-derived respiration with `ecg.sloperange`.
 - HRV false-positive removal with `hrv.removefp`.
 - HRV missing-event reconstruction with `hrv.fillgaps`.
+- HRV heart-timing reconstruction and TVIPFM modulation with `hrv.ipfm`.
 - HRV time-domain metrics with `hrv.tdmetrics`.
 - NaN-aware filtering tools that preserve long gaps and boundary gaps.
 - MATLAB/Biosigmat-compatible low-pass differentiator design through `tools.lpd_filter`.

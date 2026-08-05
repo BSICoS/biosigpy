@@ -23,6 +23,10 @@
       "status": "conformant",
       "entry_point": "biosigpy.hrv.fillgaps.fillgaps"
     },
+    "hrv.ipfm": {
+      "status": "conformant",
+      "entry_point": "biosigpy.hrv.ipfm.ipfm"
+    },
     "ecg.pantompkins": {
       "status": "conformant",
       "entry_point": "biosigpy.ecg.pantompkins.pantompkins"
