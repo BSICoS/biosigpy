@@ -12,6 +12,7 @@ python -m pip install -e ".[examples]"
 
 - [HRV false-positive removal](hrv-removefp.md)
 - [HRV missing-event reconstruction](hrv-fillgaps.md)
+- [HRV heart-timing reconstruction](hrv-ipfm.md)
 - [HRV time-domain metrics](hrv-tdmetrics.md)
 - [ECG Pan-Tompkins R-wave detection](ecg-pantompkins.md)
 - [ECG slope-range respiration](ecg-sloperange.md)

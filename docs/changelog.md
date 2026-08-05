@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+- Implemented the sampled Biosiglib `hrv.ipfm` contract with the canonical
+  edge-stabilized B-spline, uniform output grid, and optional TVIPFM signal.
+- Consumed all six shared `hrv.ipfm` cases directly from Biosiglib, including
+  the Biosigmat-backed nonuniform-event and TVIPFM fixture.
+- Added an executable IPFM example aligned with the Biosigmat workflow and
+  using the same first 100 Medicom MTD event times.
+- Pinned conformance to Biosiglib v1.3.0 at commit
+  `a1e7c3eae157c588705117ea9480b2cf3190d107`.
+
 ## 0.2.0 - 2026-08-04
 
 - Implemented the Biosiglib `hrv.removefp` contract with strict input order,
