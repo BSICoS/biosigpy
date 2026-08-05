@@ -1,5 +1,7 @@
 title: HRV
 arrange:
-  - removefp.md
+  - index.md
   - fillgaps.md
+  - ipfm.md
+  - removefp.md
   - tdmetrics.md
