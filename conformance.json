@@ -27,6 +27,14 @@
       "status": "conformant",
       "entry_point": "biosigpy.hrv.ipfm.ipfm"
     },
+    "hrv.osp": {
+      "status": "conformant",
+      "entry_point": "biosigpy.hrv.osp.osp"
+    },
+    "hrv.fdmetrics": {
+      "status": "conformant",
+      "entry_point": "biosigpy.hrv.fdmetrics.fdmetrics"
+    },
     "ecg.pantompkins": {
       "status": "conformant",
       "entry_point": "biosigpy.ecg.pantompkins.pantompkins"
