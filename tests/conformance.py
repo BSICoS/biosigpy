@@ -6,16 +6,23 @@ import csv
 import json
 import os
 import subprocess
-from collections.abc import Callable, Mapping
+from collections.abc import Callable, Mapping, Sequence
 from functools import lru_cache
 from pathlib import Path
-from typing import Any
+from typing import Any, Protocol
 
 import numpy as np
 import pytest
 
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
+
+
+class CanonicalWarning(Protocol):
+    """Warning data required by the shared conformance comparison."""
+
+    warning_id: str
+    affected_ids: Sequence[str]
 
 
 @lru_cache(maxsize=1)
@@ -233,6 +240,29 @@ def assert_expected_outputs(
             rtol=0.0,
             atol=expected_output["absolute_tolerance"],
             equal_nan=case_definition["nan_equal"],
+        )
+
+
+def assert_expected_warnings(
+    actual_warnings: Sequence[CanonicalWarning],
+    case_definition: Mapping[str, Any],
+) -> None:
+    """Compare canonical warning IDs and aggregated affected IDs."""
+
+    expected_warnings = case_definition.get("expected_warnings", [])
+    actual_by_id = {warning.warning_id: warning for warning in actual_warnings}
+    expected_by_id = {
+        expected_warning["id"]: expected_warning
+        for expected_warning in expected_warnings
+    }
+
+    assert len(actual_warnings) == len(actual_by_id), (
+        "warnings must be emitted once per canonical id"
+    )
+    assert actual_by_id.keys() == expected_by_id.keys()
+    for warning_id, expected_warning in expected_by_id.items():
+        assert set(actual_by_id[warning_id].affected_ids) == set(
+            expected_warning["affected_ids"]
         )
 
 
