@@ -4,5 +4,6 @@ arrange:
   - hrv-removefp.md
   - hrv-fillgaps.md
   - hrv-tdmetrics.md
+  - ecg-baselineremove.md
   - ecg-pantompkins.md
   - ecg-sloperange.md

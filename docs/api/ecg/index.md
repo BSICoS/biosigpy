@@ -17,6 +17,7 @@ and derived-signal algorithms.
 
 ## Examples
 
+- [Baseline-wander removal](../../examples/ecg-baselineremove.md)
 - [Pan-Tompkins R-wave detection](../../examples/ecg-pantompkins.md)
 - [Slope-range respiration](../../examples/ecg-sloperange.md)
 
