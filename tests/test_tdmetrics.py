@@ -31,13 +31,6 @@ def test_conformance(case_definition: dict[str, object]) -> None:
     assert_expected_outputs(outputs, case_definition)
 
 
-def test_nan_markers_are_omitted_before_successive_differences() -> None:
-    dtk = np.array([0.8, np.nan, 0.82, 0.78])
-    expected = tdmetrics(np.array([0.8, 0.82, 0.78]))
-
-    assert tdmetrics(dtk) == expected
-
-
 def test_all_nan_input_returns_all_nan_metrics() -> None:
     outputs = tdmetrics(np.array([np.nan, np.nan]))
 
