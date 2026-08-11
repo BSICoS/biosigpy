@@ -18,6 +18,7 @@ from biosigpy.hrv.fdmetrics import (
 )
 from conformance import (
     assert_expected_outputs,
+    assert_expected_warnings,
     case_id,
     cases_for_specification,
     load_input,
@@ -39,7 +40,7 @@ def test_conformance(case_definition: dict[str, object]) -> None:
         for item in caught
         if isinstance(item.message, FdMetricsWarning)
     ]
-    _assert_expected_warnings(actual_warnings, case_definition)
+    assert_expected_warnings(actual_warnings, case_definition)
     assert len(actual_warnings) == len(caught)
     assert_expected_outputs(result._asdict(), case_definition)
 
@@ -59,21 +60,6 @@ def _execute_case(
         related_pxx=load_input(case_definition, "related_pxx"),
         unrelated_pxx=load_input(case_definition, "unrelated_pxx"),
     )
-
-
-def _assert_expected_warnings(
-    actual: list[FdMetricsWarning], case_definition: dict[str, object]
-) -> None:
-    expected = case_definition.get("expected_warnings", [])
-    actual_by_id = {item.warning_id: item for item in actual}
-    expected_by_id = {item["id"]: item for item in expected}
-
-    assert len(actual) == len(actual_by_id), "warnings must be emitted once per id"
-    assert actual_by_id.keys() == expected_by_id.keys()
-    for warning_id, expected_warning in expected_by_id.items():
-        assert set(actual_by_id[warning_id].affected_ids) == set(
-            expected_warning["affected_ids"]
-        )
 
 
 def test_named_results_and_public_reexports() -> None:
