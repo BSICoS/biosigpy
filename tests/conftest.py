@@ -3,9 +3,14 @@
 from collections.abc import Mapping
 from typing import Any
 
+import matplotlib
 import pytest
 
 from conformance import assert_complete_case_coverage, discover_cases
+
+
+# Render plotting and debug paths without opening GUI windows during tests.
+matplotlib.use("Agg", force=True)
 
 
 def pytest_collection_modifyitems(
