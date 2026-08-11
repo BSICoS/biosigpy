@@ -18,7 +18,7 @@ def pytest_collection_modifyitems(
 ) -> None:
     """Fail default full-suite collection when a discovered case is uncollected."""
 
-    if config.invocation_params.args:
+    if _collection_is_scoped(config):
         return
 
     discovered_case_ids = {case["id"] for case in discover_cases()}
@@ -43,4 +43,25 @@ def _is_conformance_case(parameter: Any) -> bool:
         and "id" in parameter
         and "specification_id" in parameter
         and ("expected_outputs" in parameter or "expected_error" in parameter)
+    )
+
+
+def _collection_is_scoped(config: pytest.Config) -> bool:
+    """Return whether pytest was asked to collect only part of the suite."""
+
+    args_source = getattr(config, "args_source", None)
+    if getattr(args_source, "name", None) == "ARGS":
+        return True
+
+    collection_filters = (
+        "keyword",
+        "markexpr",
+        "ignore",
+        "ignore_glob",
+        "deselect",
+        "lf",
+    )
+    return any(
+        getattr(config.option, option, None)
+        for option in collection_filters
     )
