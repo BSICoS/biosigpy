@@ -16,6 +16,7 @@ python -m pip install -e ".[examples]"
 - [HRV heart-timing reconstruction](hrv-ipfm.md)
 - [HRV respiration-related decomposition](hrv-osp.md)
 - [HRV time-domain metrics](hrv-tdmetrics.md)
+- [ECG baseline-wander removal](ecg-baselineremove.md)
 - [ECG Pan-Tompkins R-wave detection](ecg-pantompkins.md)
 - [ECG slope-range respiration](ecg-sloperange.md)
 

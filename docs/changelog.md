@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Implemented the shared `ecg.baselineremove` contract with structured warning
+  metadata, explicit finite-real validation, canonical fiducial normalization,
+  local averaging, and MATLAB-compatible spline interpolation and extrapolation.
+- Added all eight shared conformance cases, public re-exports, API
+  documentation, and a direct Python port of the Biosigmat baseline-removal
+  example.
 - Added dedicated HRV and ECG module overviews linking every conformant
   function and its executable example, following the Biosigmat structure.
 - Implemented the sampled Biosiglib `hrv.ipfm` contract with the canonical

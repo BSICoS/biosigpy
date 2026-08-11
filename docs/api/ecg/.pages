@@ -1,5 +1,6 @@
 title: ECG
 arrange:
   - index.md
+  - baselineremove.md
   - pantompkins.md
   - sloperange.md
