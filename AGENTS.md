@@ -14,10 +14,10 @@ This file provides persistent context for AI coding agents working in Biosigpy. 
 - ECG R-wave timing identifiers must use `r_wave_*`, not `r_peak_*`.
 - Generic timing or interval algorithms, including `hrv.tdmetrics`, must remain modality-generic unless the contract explicitly narrows them.
 - Examples remain under `examples/`; corresponding examples across implementations should preserve the same scientific workflow where practical.
-- `conformance.json` pins an exact Biosiglib commit and declares conformance with every specification in that commit.
-- Every shared case from the pinned commit must be executed. Partial support and roadmap states belong in issues and pull requests, not in the manifest.
+- `biosiglib.lock` contains the exact lowercase Biosiglib commit SHA used by the shared suite.
+- Merged code must conform to every specification in the pinned commit and execute every shared case. Partial support and roadmap states belong in issues and pull requests.
 - Shared fixtures and cases must be consumed from a Biosiglib checkout and not copied back into Biosigpy.
-- Implementation manifest validation must use Biosiglib's `tools/validate_specs.py --manifest PATH` command instead of duplicating JSON Schema validation code.
+- The normal full pytest command must validate the lock, verify the resolved Biosiglib checkout commit, and execute every shared case.
 - Code, comments, filenames, and technical documentation must be in English.
 - Avoid generic resource APIs and unnecessary cross-language infrastructure.
 

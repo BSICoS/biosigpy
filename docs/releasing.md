@@ -9,12 +9,12 @@ this procedure.
 1. Update the single version in `src/biosigpy/_version.py`.
 2. Move user-visible changes from `Unreleased` into a dated changelog entry and
    add `docs/releases/vX.Y.Z.md`.
-3. Confirm that `conformance.json` pins the intended exact Biosiglib commit and
+3. Confirm that `biosiglib.lock` pins the intended exact Biosiglib commit and
    that Biosiglib has not yet released a different commit for this coordinated change.
-4. Run the full Python suite and the pinned Biosiglib manifest validator.
+4. Run the full Python suite; it validates the lock and every shared case.
 5. Build the documentation with `mkdocs build --strict`.
 6. Build both artifacts with `python -m build` from a clean checkout and confirm
-   that the source archive contains `conformance.json`, release documentation,
+   that the source archive contains `biosiglib.lock`, release documentation,
    and the complete test harness.
 7. Install the wheel and source archive into separate clean virtual
    environments and verify `biosigpy.__version__`, package metadata, imports,

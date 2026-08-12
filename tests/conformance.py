@@ -5,6 +5,7 @@ from __future__ import annotations
 import csv
 import json
 import os
+import re
 import subprocess
 from collections.abc import Callable, Mapping, Sequence
 from functools import lru_cache
@@ -26,8 +27,19 @@ class CanonicalWarning(Protocol):
 
 
 @lru_cache(maxsize=1)
-def load_manifest() -> dict[str, Any]:
-    return json.loads((REPOSITORY_ROOT / "conformance.json").read_text(encoding="utf-8"))
+def load_biosiglib_commit() -> str:
+    """Read the exact Biosiglib commit pinned by this repository."""
+
+    lock_path = REPOSITORY_ROOT / "biosiglib.lock"
+    try:
+        raw_lock = lock_path.read_text(encoding="utf-8")
+    except OSError as exc:
+        raise RuntimeError(f"Unable to read Biosiglib lock {lock_path}: {exc}") from exc
+    if re.fullmatch(r"[0-9a-f]{40}\n?", raw_lock) is None:
+        raise RuntimeError(
+            f"Biosiglib lock must contain one lowercase 40-character SHA: {lock_path}"
+        )
+    return raw_lock.strip()
 
 
 @lru_cache(maxsize=1)
@@ -41,7 +53,7 @@ def biosiglib_root() -> Path:
     if not root.is_dir():
         raise RuntimeError(f"Biosiglib checkout does not exist: {root}")
 
-    expected_commit = load_manifest()["biosiglib"]["commit"]
+    expected_commit = load_biosiglib_commit()
     completed = subprocess.run(
         [
             "git",

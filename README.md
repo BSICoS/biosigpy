@@ -42,7 +42,7 @@ SciPy 1.11.4 or newer. Query the installed implementation version with
 
 ## Biosiglib conformance
 
-Biosigpy implements conformant Python APIs for the Biosiglib algorithms currently in scope. The root `conformance.json` pins the exact Biosiglib revision used by shared conformance tests.
+Biosigpy implements conformant Python APIs for the Biosiglib algorithms currently in scope. The root `biosiglib.lock` pins the exact Biosiglib revision used by shared conformance tests.
 
 See [Conformance](docs/conformance.md) for validation commands and local checkout details.
 

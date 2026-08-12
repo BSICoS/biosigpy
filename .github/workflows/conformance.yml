@@ -24,11 +24,13 @@ jobs:
         working-directory: biosigpy
         run: |
           python - <<'PY' >> "$GITHUB_OUTPUT"
-          import json
+          import re
           from pathlib import Path
 
-          manifest = json.loads(Path("conformance.json").read_text(encoding="utf-8"))
-          commit = manifest["biosiglib"]["commit"]
+          raw_lock = Path("biosiglib.lock").read_text(encoding="utf-8")
+          if re.fullmatch(r"[0-9a-f]{40}\n?", raw_lock) is None:
+              raise SystemExit("biosiglib.lock must contain one lowercase 40-character SHA")
+          commit = raw_lock.strip()
           print(f"commit={commit}")
           PY
 
@@ -57,10 +59,6 @@ jobs:
           BIOSIGLIB_ROOT: ${{ github.workspace }}/biosiglib
         run: python -m pytest
 
-      - name: Validate conformance manifest
-        working-directory: biosigpy
-        run: python ../biosiglib/tools/validate_specs.py --manifest conformance.json
-
   compatibility:
     name: compatibility (${{ matrix.python-version }}, ${{ matrix.dependency-set }})
     runs-on: ubuntu-latest
@@ -87,11 +85,13 @@ jobs:
         working-directory: biosigpy
         run: |
           python - <<'PY' >> "$GITHUB_OUTPUT"
-          import json
+          import re
           from pathlib import Path
 
-          manifest = json.loads(Path("conformance.json").read_text(encoding="utf-8"))
-          print(f"commit={manifest['biosiglib']['commit']}")
+          raw_lock = Path("biosiglib.lock").read_text(encoding="utf-8")
+          if re.fullmatch(r"[0-9a-f]{40}\n?", raw_lock) is None:
+              raise SystemExit("biosiglib.lock must contain one lowercase 40-character SHA")
+          print(f"commit={raw_lock.strip()}")
           PY
 
       - name: Check out pinned Biosiglib
@@ -126,7 +126,3 @@ jobs:
         env:
           BIOSIGLIB_ROOT: ${{ github.workspace }}/biosiglib
         run: python -m pytest
-
-      - name: Validate conformance manifest
-        working-directory: biosigpy
-        run: python ../biosiglib/tools/validate_specs.py --manifest conformance.json

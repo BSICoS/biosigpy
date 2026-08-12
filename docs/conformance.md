@@ -1,6 +1,6 @@
 # Conformance
 
-Biosigpy uses `conformance.json` to pin the exact Biosiglib revision used for shared conformance testing. The manifest declares conformance with every specification in that revision; it is not a support inventory or roadmap.
+Biosigpy uses the one-line `biosiglib.lock` file to pin the exact Biosiglib revision used for shared conformance testing. Merged code must conform to every specification in that revision; partial support and roadmaps belong in issues and pull requests.
 
 Shared conformance cases define scientific and computational behavior across implementations. Python-specific tests additionally cover Python API behavior, packaging, exceptions, and local implementation details.
 
@@ -12,12 +12,12 @@ Scientific or computational behavior changes should first be reflected in Biosig
 
 ```powershell
 $env:PYTHONPATH='src'; .venv\Scripts\python.exe -m pytest
-.venv\Scripts\python.exe ..\biosiglib\tools\validate_specs.py --manifest conformance.json
 ```
 
 ## Run validation on Unix shells
 
 ```bash
 PYTHONPATH=src python -m pytest
-python ../biosiglib/tools/validate_specs.py --manifest conformance.json
 ```
+
+This single command validates the lock, verifies the Biosiglib checkout commit, and executes every shared case.
