@@ -20,12 +20,13 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Verify tag and release notes
+      - name: Verify tag and extract release notes
         env:
           RELEASE_TAG: ${{ github.ref_name }}
         run: |
           python - <<'PY'
           import os
+          import re
           import runpy
           from pathlib import Path
 
@@ -34,9 +35,19 @@ jobs:
           actual_tag = os.environ["RELEASE_TAG"]
           if actual_tag != expected_tag:
               raise SystemExit(f"Tag {actual_tag!r} does not match {expected_tag!r}")
-          notes = Path("docs/releases") / f"{actual_tag}.md"
-          if not notes.is_file():
-              raise SystemExit(f"Missing release notes: {notes}")
+
+          changelog = Path("CHANGELOG.md").read_text(encoding="utf-8")
+          heading = re.compile(
+              rf"^## {re.escape(version)}(?:\s+-[^\n]*)?\s*$", re.MULTILINE
+          )
+          match = heading.search(changelog)
+          if match is None:
+              raise SystemExit(f"CHANGELOG.md has no section for {version}")
+          next_heading = re.search(r"^## ", changelog[match.end():], re.MULTILINE)
+          end = match.end() + next_heading.start() if next_heading else len(changelog)
+          Path(".release-notes.md").write_text(
+              changelog[match.start():end].strip() + "\n", encoding="utf-8"
+          )
           PY
 
       - name: Build wheel and source distribution
@@ -59,9 +70,7 @@ jobs:
               members = {Path(name).as_posix() for name in archive.getnames()}
           suffixes = {
               "biosiglib.lock",
-              "docs/changelog.md",
-              "docs/releasing.md",
-              f"docs/releases/v{version}.md",
+              "CHANGELOG.md",
               "tests/conftest.py",
               "tests/conformance.py",
           }
@@ -93,4 +102,4 @@ jobs:
       - name: Publish GitHub release
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh release create "$GITHUB_REF_NAME" dist/* --verify-tag --title "Biosigpy $GITHUB_REF_NAME" --notes-file "docs/releases/$GITHUB_REF_NAME.md"
+        run: gh release create "$GITHUB_REF_NAME" dist/* --verify-tag --title "Biosigpy $GITHUB_REF_NAME" --notes-file ".release-notes.md"

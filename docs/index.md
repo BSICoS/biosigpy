@@ -8,7 +8,7 @@ Biosigpy provides Python functions for biomedical signal processing.
 
 ## Start here
 
-- [Install Biosigpy](getting-started/installation.md)
+- [Install Biosigpy](installation.md)
 - [Browse the Python API](api/index.md)
 - [Understand the methods and their scientific basis](https://bsicos.github.io/biosiglib/methods/)
 - [View the source or report a problem](https://github.com/BSICoS/biosigpy)
