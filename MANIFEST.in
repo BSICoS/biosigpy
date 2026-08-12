@@ -1,4 +1,4 @@
-include conformance.json
+include biosiglib.lock
 include mkdocs.yml
 include pytest.ini
 include requirements-dev.txt

@@ -58,7 +58,7 @@ jobs:
           with tarfile.open(archives[0], "r:gz") as archive:
               members = {Path(name).as_posix() for name in archive.getnames()}
           suffixes = {
-              "conformance.json",
+              "biosiglib.lock",
               "docs/changelog.md",
               "docs/releasing.md",
               f"docs/releases/v{version}.md",

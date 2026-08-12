@@ -1,9 +1,11 @@
 """Regression tests for shared conformance harness behavior."""
 
+from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
 
+import conformance
 import conftest
 from conformance import assert_complete_case_coverage, assert_expected_warnings
 
@@ -105,6 +107,20 @@ def test_duplicate_canonical_warning_id_fails() -> None:
 
     with pytest.raises(AssertionError, match="once per canonical id"):
         assert_expected_warnings([warning, warning], case_definition)
+
+
+def test_invalid_biosiglib_lock_fails(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(conformance, "REPOSITORY_ROOT", tmp_path)
+    (tmp_path / "biosiglib.lock").write_text("main\n", encoding="utf-8")
+    conformance.load_biosiglib_commit.cache_clear()
+
+    with pytest.raises(RuntimeError, match="lowercase 40-character SHA"):
+        conformance.load_biosiglib_commit()
+
+    conformance.load_biosiglib_commit.cache_clear()
 
 
 def _fake_config(
