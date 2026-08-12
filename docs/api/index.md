@@ -1,6 +1,6 @@
 # API Reference
 
-This reference documents the public Python functions currently marked conformant against the Biosiglib commit pinned by `conformance.json`.
+This reference documents the public Python implementation of every specification in the Biosiglib commit pinned by `conformance.json`.
 
 API reference pages are generated from public Python docstrings with `mkdocstrings`, so `help(function)` and the documentation site stay aligned. Biosiglib remains the normative source for scientific and computational behavior.
 

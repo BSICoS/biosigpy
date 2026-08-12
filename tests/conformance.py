@@ -77,24 +77,18 @@ def load_case(case_id: str) -> dict[str, Any]:
 
 @lru_cache(maxsize=1)
 def discover_cases() -> tuple[dict[str, Any], ...]:
-    """Discover every case for specifications declared conformant."""
+    """Discover every case for every specification in the pinned checkout."""
 
     discovered: list[dict[str, Any]] = []
     seen_case_ids: set[str] = set()
-    manifest = load_manifest()
-    conformant_specification_ids = sorted(
-        specification_id
-        for specification_id, implementation in manifest["specifications"].items()
-        if implementation["status"] == "conformant"
-    )
 
-    for specification_id in conformant_specification_ids:
+    for specification_id in discover_specification_ids():
         module, algorithm = specification_id.split(".", maxsplit=1)
         case_directory = biosiglib_root() / "conformance" / module / algorithm
         case_paths = sorted(case_directory.glob("*.json"))
         if not case_paths:
             raise RuntimeError(
-                "No Biosiglib conformance cases found for conformant "
+                "No Biosiglib conformance cases found for "
                 f"specification {specification_id!r} in {case_directory}"
             )
 
@@ -127,14 +121,34 @@ def discover_cases() -> tuple[dict[str, Any], ...]:
     return tuple(discovered)
 
 
-def cases_for_specification(specification_id: str) -> tuple[dict[str, Any], ...]:
-    """Return all discovered cases for one conformant specification."""
+@lru_cache(maxsize=1)
+def discover_specification_ids() -> tuple[str, ...]:
+    """Return every canonical specification ID from the pinned checkout."""
 
-    manifest_entry = load_manifest()["specifications"].get(specification_id)
-    if manifest_entry is None or manifest_entry["status"] != "conformant":
-        raise RuntimeError(
-            f"Specification {specification_id!r} is not declared conformant"
-        )
+    specification_ids: set[str] = set()
+    for specification_path in sorted((biosiglib_root() / "specs").rglob("spec.json")):
+        specification = json.loads(specification_path.read_text(encoding="utf-8"))
+        specification_id = specification.get("metadata", {}).get("id")
+        if not isinstance(specification_id, str) or not specification_id:
+            raise RuntimeError(
+                f"Biosiglib specification has no canonical ID: {specification_path}"
+            )
+        if specification_id in specification_ids:
+            raise RuntimeError(
+                f"Duplicate Biosiglib specification ID {specification_id!r}"
+            )
+        specification_ids.add(specification_id)
+
+    if not specification_ids:
+        raise RuntimeError("No Biosiglib specifications found in the pinned checkout")
+    return tuple(sorted(specification_ids))
+
+
+def cases_for_specification(specification_id: str) -> tuple[dict[str, Any], ...]:
+    """Return all discovered cases for one pinned specification."""
+
+    if specification_id not in discover_specification_ids():
+        raise RuntimeError(f"Unknown Biosiglib specification {specification_id!r}")
     return tuple(
         case
         for case in discover_cases()

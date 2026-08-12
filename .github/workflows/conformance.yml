@@ -29,9 +29,7 @@ jobs:
 
           manifest = json.loads(Path("conformance.json").read_text(encoding="utf-8"))
           commit = manifest["biosiglib"]["commit"]
-          release = manifest["biosiglib"].get("release", "")
           print(f"commit={commit}")
-          print(f"release={release}")
           PY
 
       - name: Check out pinned Biosiglib
