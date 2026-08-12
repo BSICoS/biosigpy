@@ -9,8 +9,8 @@ this procedure.
 1. Update the single version in `src/biosigpy/_version.py`.
 2. Move user-visible changes from `Unreleased` into a dated changelog entry and
    add `docs/releases/vX.Y.Z.md`.
-3. Confirm that `conformance.json` records the intended Biosiglib release and
-   exact commit.
+3. Confirm that `conformance.json` pins the intended exact Biosiglib commit and
+   that Biosiglib has not yet released a different commit for this coordinated change.
 4. Run the full Python suite and the pinned Biosiglib manifest validator.
 5. Build the documentation with `mkdocs build --strict`.
 6. Build both artifacts with `python -m build` from a clean checkout and confirm

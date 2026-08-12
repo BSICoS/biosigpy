@@ -1,70 +1,10 @@
 {
-  "$schema": "https://raw.githubusercontent.com/BSICoS/biosiglib/61079eb8b0444eb81ba0c9e977378da15481bad6/schemas/implementation-manifest.schema.json",
+  "$schema": "https://raw.githubusercontent.com/BSICoS/biosiglib/f22e2569661ca06bda9865640174bfbe7980003f/schemas/implementation-manifest.schema.json",
   "implementation": {
     "name": "biosigpy",
-    "language": "Python",
-    "repository": "https://github.com/BSICoS/biosigpy"
+    "language": "Python"
   },
   "biosiglib": {
-    "repository": "https://github.com/BSICoS/biosiglib",
-    "commit": "61079eb8b0444eb81ba0c9e977378da15481bad6"
-  },
-  "specifications": {
-    "hrv.tdmetrics": {
-      "status": "conformant",
-      "entry_point": "biosigpy.hrv.tdmetrics.tdmetrics"
-    },
-    "hrv.removefp": {
-      "status": "conformant",
-      "entry_point": "biosigpy.hrv.removefp.removefp"
-    },
-    "hrv.fillgaps": {
-      "status": "conformant",
-      "entry_point": "biosigpy.hrv.fillgaps.fillgaps"
-    },
-    "hrv.ipfm": {
-      "status": "conformant",
-      "entry_point": "biosigpy.hrv.ipfm.ipfm"
-    },
-    "hrv.osp": {
-      "status": "conformant",
-      "entry_point": "biosigpy.hrv.osp.osp"
-    },
-    "hrv.fdmetrics": {
-      "status": "conformant",
-      "entry_point": "biosigpy.hrv.fdmetrics.fdmetrics"
-    },
-    "ecg.pantompkins": {
-      "status": "conformant",
-      "entry_point": "biosigpy.ecg.pantompkins.pantompkins"
-    },
-    "ecg.sloperange": {
-      "status": "conformant",
-      "entry_point": "biosigpy.ecg.sloperange.sloperange"
-    },
-    "ecg.baselineremove": {
-      "status": "conformant",
-      "entry_point": "biosigpy.ecg.baselineremove.baselineremove"
-    },
-    "tools.lpd_filter": {
-      "status": "conformant",
-      "entry_point": "biosigpy.tools.lpd_filter.lpd_filter"
-    },
-    "tools.medfilt_threshold": {
-      "status": "conformant",
-      "entry_point": "biosigpy.tools.medfilt_threshold.medfilt_threshold"
-    },
-    "tools.nan_filter": {
-      "status": "conformant",
-      "entry_point": "biosigpy.tools.nan_filter.nan_filter"
-    },
-    "tools.nan_filtfilt": {
-      "status": "conformant",
-      "entry_point": "biosigpy.tools.nan_filtfilt.nan_filtfilt"
-    },
-    "tools.snap_to_peak": {
-      "status": "conformant",
-      "entry_point": "biosigpy.tools.snap_to_peak.snap_to_peak"
-    }
+    "commit": "f22e2569661ca06bda9865640174bfbe7980003f"
   }
 }

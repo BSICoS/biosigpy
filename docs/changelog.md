@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+- Simplified `conformance.json` to a total declaration against one exact
+  Biosiglib commit; removed per-specification statuses, entry points, and
+  duplicated release and repository metadata.
+- Discover every specification and shared case in the pinned Biosiglib commit,
+  rejecting specifications without cases and uncollected cases without a
+  manifest filter.
+- Changed the Biosiglib pin workflow to validate a commit before release rather
+  than propagating partial support after release.
 - Implemented the shared `ecg.baselineremove` contract with structured warning
   metadata, explicit finite-real validation, canonical fiducial normalization,
   local averaging, and MATLAB-compatible spline interpolation and extrapolation.
