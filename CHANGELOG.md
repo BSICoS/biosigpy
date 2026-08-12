@@ -14,7 +14,7 @@ This file is the authoritative release history. GitHub Releases reuse the corres
 - Implemented the sampled Biosiglib `hrv.ipfm` contract with the canonical edge-stabilized B-spline, uniform output grid, and optional TVIPFM signal.
 - Consumed all six shared `hrv.ipfm` cases directly from Biosiglib, including the Biosigmat-backed nonuniform-event and TVIPFM fixture.
 - Added an executable IPFM example aligned with the Biosigmat workflow and using the same first 100 Medicom MTD event times.
-- Pinned conformance to the Biosiglib v2.0.0 release target at commit `5cb22022fbe5474181f3334b97d71f8e2e2731e9`.
+- Pinned conformance to the Biosiglib v2.0.0 release target at commit `9f2370451c6b77296c2714f719132edb7fa034c0`.
 
 ## 0.2.0 - 2026-08-04
 
