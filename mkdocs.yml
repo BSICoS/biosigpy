@@ -28,9 +28,6 @@ theme:
 plugins:
   - search
   - awesome-pages
-  - git-revision-date-localized:
-      type: date
-      fallback_to_build_date: true
   - mkdocstrings:
       handlers:
         python:
@@ -44,7 +41,6 @@ plugins:
             separate_signature: true
   - minify:
       minify_html: true
-  - redirects
 
 markdown_extensions:
   - admonition

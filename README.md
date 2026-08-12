@@ -2,7 +2,7 @@
 
 [![Python](https://img.shields.io/badge/Python-3.10--3.13-blue)](https://www.python.org/)
 [![License](https://img.shields.io/badge/License-GPL--3.0-green.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/Version-0.2.0-orange)](src/biosigpy/_version.py)
+[![Latest release](https://img.shields.io/github/v/release/BSICoS/biosigpy?label=Version)](https://github.com/BSICoS/biosigpy/releases/latest)
 
 Python functions for biomedical signal processing, maintained by the [BSICoS Research Group](https://bsicos.i3a.es/).
 
@@ -14,11 +14,11 @@ Download the wheel from the [latest GitHub release](https://github.com/BSICoS/bi
 python -m pip install path/to/biosigpy-*.whl
 ```
 
-Python 3.10–3.13, NumPy 1.26.4 or newer, and SciPy 1.11.4 or newer are supported. See the [installation guide](docs/getting-started/installation.md) for development setup.
+Python 3.10–3.13, NumPy 1.26.4 or newer, and SciPy 1.11.4 or newer are supported. See the public [installation guide](https://bsicos.github.io/biosigpy/installation/) for the complete instructions.
 
 ## Documentation
 
-The [Biosigpy documentation](https://bsicos.github.io/biosigpy/) contains the Python API, with direct links to executable example code. For practical method descriptions, expected inputs and outputs, scientific references, and links to the MATLAB implementation, use the [Biosiglib method catalog](https://bsicos.github.io/biosiglib/methods/).
+The [Biosigpy documentation](https://bsicos.github.io/biosigpy/) contains the Python API, with direct links to executable example code. For practical method descriptions, expected inputs and outputs, scientific references, and links to the MATLAB implementation, use the [Biosiglib method catalog](https://bsicos.github.io/biosiglib/methods/). See the [changelog](CHANGELOG.md) for the release history.
 
 ## Support and license
 

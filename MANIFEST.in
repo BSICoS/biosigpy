@@ -1,4 +1,5 @@
 include biosiglib.lock
+include CHANGELOG.md
 include mkdocs.yml
 include pytest.ini
 include requirements-dev.txt
