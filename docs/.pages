@@ -2,7 +2,6 @@ arrange:
   - index.md
   - getting-started
   - api
-  - examples
   - conformance.md
   - contribute
   - changelog.md

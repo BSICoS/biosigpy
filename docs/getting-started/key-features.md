@@ -1,12 +1,11 @@
-# Key Features
+# Available methods
 
-- Biosiglib conformance for the algorithms currently in scope.
-- ECG R-wave detection with `ecg.pantompkins`.
-- ECG-derived respiration with `ecg.sloperange`.
-- HRV false-positive removal with `hrv.removefp`.
-- HRV missing-event reconstruction with `hrv.fillgaps`.
-- HRV heart-timing reconstruction and TVIPFM modulation with `hrv.ipfm`.
-- HRV time-domain metrics with `hrv.tdmetrics`.
-- NaN-aware filtering tools that preserve long gaps and boundary gaps.
-- MATLAB/Biosigmat-compatible low-pass differentiator design through `tools.lpd_filter`.
-- Executable examples for HRV preprocessing and metrics, ECG R-wave detection, and ECG-derived respiration.
+Biosigpy includes methods for:
+
+- ECG baseline removal, R-wave detection, and ECG-derived respiration;
+- event-timing cleanup, gap reconstruction, and uniformly sampled heart-rate signals;
+- time- and frequency-domain variability metrics;
+- respiration-related HRV decomposition;
+- NaN-aware filtering, differentiator design, robust thresholds, and peak refinement.
+
+See the [API reference](../api/index.md) for Python signatures or the [Biosiglib method catalog](https://bsicos.github.io/biosiglib/methods/) for inputs, outputs, scientific context, and references.
