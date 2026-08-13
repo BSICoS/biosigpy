@@ -1,8 +1,8 @@
 # Biosigpy
 
-[![Python](https://img.shields.io/badge/Python-3.10--3.13-blue)](https://www.python.org/)
+[![PyPI version](https://img.shields.io/pypi/v/biosigpy.svg)](https://pypi.org/project/biosigpy/)
+[![Python versions](https://img.shields.io/pypi/pyversions/biosigpy.svg)](https://pypi.org/project/biosigpy/)
 [![License](https://img.shields.io/badge/License-GPL--3.0-green.svg)](LICENSE)
-[![Latest release](https://img.shields.io/github/v/release/BSICoS/biosigpy?label=Version)](https://github.com/BSICoS/biosigpy/releases/latest)
 
 Python functions for biomedical signal processing, maintained by the [BSICoS Research Group](https://bsicos.i3a.es/).
 
