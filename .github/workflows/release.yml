@@ -5,12 +5,12 @@ on:
     tags:
       - "v*.*.*"
 
-permissions:
-  contents: write
-
 jobs:
-  release:
+  build:
+    name: Build and verify distributions
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - name: Check out tagged source
         uses: actions/checkout@v4
@@ -45,7 +45,7 @@ jobs:
               raise SystemExit(f"CHANGELOG.md has no section for {version}")
           next_heading = re.search(r"^## ", changelog[match.end():], re.MULTILINE)
           end = match.end() + next_heading.start() if next_heading else len(changelog)
-          Path(".release-notes.md").write_text(
+          Path("release-notes.md").write_text(
               changelog[match.start():end].strip() + "\n", encoding="utf-8"
           )
           PY
@@ -99,7 +99,73 @@ jobs:
           sha256sum *.whl *.tar.gz > SHA256SUMS
           sha256sum --check SHA256SUMS
 
+      - name: Prepare GitHub release metadata
+        run: |
+          mkdir release-metadata
+          cp dist/SHA256SUMS release-metadata/
+          cp release-notes.md release-metadata/
+
+      - name: Upload verified distributions
+        uses: actions/upload-artifact@v7
+        with:
+          name: python-distributions
+          path: |
+            dist/*.whl
+            dist/*.tar.gz
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Upload GitHub release metadata
+        uses: actions/upload-artifact@v7
+        with:
+          name: github-release-metadata
+          path: release-metadata/
+          if-no-files-found: error
+          retention-days: 7
+
+  github-release:
+    name: Publish GitHub release
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Download verified distributions
+        uses: actions/download-artifact@v8
+        with:
+          name: python-distributions
+          path: dist
+
+      - name: Download release metadata
+        uses: actions/download-artifact@v8
+        with:
+          name: github-release-metadata
+          path: release-metadata
+
       - name: Publish GitHub release
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh release create "$GITHUB_REF_NAME" dist/* --verify-tag --title "Biosigpy $GITHUB_REF_NAME" --notes-file ".release-notes.md"
+          GH_REPO: ${{ github.repository }}
+        run: >-
+          gh release create "$GITHUB_REF_NAME" dist/* release-metadata/SHA256SUMS
+          --verify-tag --title "Biosigpy $GITHUB_REF_NAME"
+          --notes-file "release-metadata/release-notes.md"
+
+  pypi-publish:
+    name: Publish PyPI release
+    needs: [build, github-release]
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/p/biosigpy
+    permissions:
+      id-token: write
+    steps:
+      - name: Download verified distributions
+        uses: actions/download-artifact@v8
+        with:
+          name: python-distributions
+          path: dist
+
+      - name: Publish distributions to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1

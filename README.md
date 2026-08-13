@@ -8,13 +8,13 @@ Python functions for biomedical signal processing, maintained by the [BSICoS Res
 
 ## Installation
 
-Download the wheel from the [latest GitHub release](https://github.com/BSICoS/biosigpy/releases/latest) and install it with pip:
+Install the latest release from PyPI:
 
 ```bash
-python -m pip install path/to/biosigpy-*.whl
+python -m pip install biosigpy
 ```
 
-Python 3.10–3.13, NumPy 1.26.4 or newer, and SciPy 1.11.4 or newer are supported. See the public [installation guide](https://bsicos.github.io/biosigpy/installation/) for the complete instructions.
+Python 3.10–3.13, NumPy 1.26.4 or newer, and SciPy 1.11.4 or newer are supported. The [latest GitHub release](https://github.com/BSICoS/biosigpy/releases/latest) also provides the verified wheel and source archive. See the public [installation guide](https://bsicos.github.io/biosigpy/installation/) for the complete instructions.
 
 ## Documentation
 
