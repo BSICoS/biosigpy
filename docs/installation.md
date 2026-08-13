@@ -6,15 +6,21 @@
 - NumPy 1.26.4 or newer
 - SciPy 1.11.4 or newer
 
-## Install the latest release
+## Install from PyPI
 
-Download a wheel from the [latest GitHub release](https://github.com/BSICoS/biosigpy/releases/latest), then install the downloaded file in your environment:
+Install the latest release and its required dependencies directly from PyPI:
+
+```bash
+python -m pip install biosigpy
+```
+
+## Install a downloaded release artifact
+
+The [latest GitHub release](https://github.com/BSICoS/biosigpy/releases/latest) provides the same verified wheel and source distribution published to PyPI. Install a downloaded artifact when you need an offline or explicitly archived copy:
 
 ```bash
 python -m pip install path/to/biosigpy-*.whl
 ```
-
-The source archive available on the same release page can be installed in the same way.
 
 ## Verify the installation
 
