@@ -131,15 +131,29 @@ def osp(
     )
     gram = subspace.T @ subspace
     gram_inverse = _gram_pseudoinverse(gram)
-    projection = subspace @ gram_inverse @ subspace.T
     delayed_modulation = modulation[delay - 1 :]
-    m_resp = projection @ delayed_modulation
+    m_resp = _project_onto_subspace(
+        subspace, gram_inverse, delayed_modulation
+    )
     m_unrelated = delayed_modulation - m_resp
     return OspResult(
         m_resp=np.asarray(m_resp, dtype=np.float64),
         m_unrelated=np.asarray(m_unrelated, dtype=np.float64),
         delay=delay,
     )
+
+
+def _project_onto_subspace(
+    subspace: NDArray[np.float64],
+    gram_inverse: NDArray[np.float64],
+    values: NDArray[np.float64],
+) -> NDArray[np.float64]:
+    """Apply the projection without materializing its square matrix."""
+
+    # By associativity, apply (V G+ V.T) m as V (G+ (V.T m)) to avoid
+    # materializing the N-by-N projection matrix when N is much larger than D.
+    coefficients = gram_inverse @ (subspace.T @ values)
+    return subspace @ coefficients
 
 
 def _validate_spectrum(

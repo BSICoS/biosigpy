@@ -2,6 +2,11 @@
 
 This file is the authoritative release history. GitHub Releases reuse the corresponding version section.
 
+## 0.3.2 - 2026-08-18
+
+- Optimized `hrv.osp` by applying the orthogonal projection associatively, avoiding the square projection matrix while preserving the defined decomposition.
+- Reduced the projection step from quadratic to linear memory in the signal length, improving repeated five-minute HRV window processing when the signal is much longer than the respiratory subspace order.
+
 ## 0.3.1 - 2026-08-13
 
 - Added trusted publishing to release the verified wheel and source distribution to PyPI without long-lived credentials.
