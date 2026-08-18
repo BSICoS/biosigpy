@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out Biosigpy
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           path: biosigpy
 
@@ -35,7 +35,7 @@ jobs:
           PY
 
       - name: Check out pinned Biosiglib
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           repository: BSICoS/biosiglib
           ref: ${{ steps.biosiglib-pin.outputs.commit }}
@@ -43,7 +43,7 @@ jobs:
           persist-credentials: false
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v7
         with:
           python-version: "3.12"
           cache: pip
@@ -76,7 +76,7 @@ jobs:
             dependency-set: latest
     steps:
       - name: Check out Biosigpy
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           path: biosigpy
 
@@ -95,7 +95,7 @@ jobs:
           PY
 
       - name: Check out pinned Biosiglib
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           repository: BSICoS/biosiglib
           ref: ${{ steps.biosiglib-pin.outputs.commit }}
@@ -103,7 +103,7 @@ jobs:
           persist-credentials: false
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v7
         with:
           python-version: ${{ matrix.python-version }}
           cache: pip
