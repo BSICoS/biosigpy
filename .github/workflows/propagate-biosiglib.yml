@@ -34,12 +34,12 @@ jobs:
           echo "biosiglib_short_commit=${normalized_commit:0:12}" >> "$GITHUB_OUTPUT"
 
       - name: Check out Biosigpy
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           path: biosigpy
 
       - name: Check out Biosiglib
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           repository: BSICoS/biosiglib
           ref: ${{ steps.propagation-inputs.outputs.biosiglib_commit }}
@@ -84,7 +84,7 @@ jobs:
           fi
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v7
         with:
           python-version: "3.12"
           cache: pip

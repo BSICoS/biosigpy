@@ -81,6 +81,11 @@ def snap_to_peak(
     window_size = as_positive_real_scalar(window_size, name="window_size")
     window_size = _round_positive_half_up(window_size)
 
+    # Reuse gap positions instead of rescanning the finite segment for every
+    # detection, which becomes quadratic in practice on gap-free ECG signals.
+    nan_indices = np.flatnonzero(np.isnan(ecg))
+    has_nan_gaps = nan_indices.size > 0
+    last_sample_index = ecg.size - 1
     refined_detections = np.empty(detections.size, dtype=np.float64)
     for detection_index, current_detection in enumerate(detections):
         if np.isnan(current_detection):
@@ -92,7 +97,22 @@ def snap_to_peak(
             refined_detections[detection_index] = np.nan
             continue
 
-        segment_start, segment_end = _finite_segment_bounds(ecg, current_detection)
+        if has_nan_gaps:
+            gap_position = int(np.searchsorted(nan_indices, current_detection))
+            segment_start = (
+                int(nan_indices[gap_position - 1]) + 1
+                if gap_position > 0
+                else 0
+            )
+            segment_end = (
+                int(nan_indices[gap_position]) - 1
+                if gap_position < nan_indices.size
+                else last_sample_index
+            )
+        else:
+            segment_start = 0
+            segment_end = last_sample_index
+
         window_start = max(segment_start, current_detection - window_size)
         window_end = min(segment_end, current_detection + window_size)
         window_signal = ecg[window_start : window_end + 1]
@@ -104,15 +124,3 @@ def snap_to_peak(
 
 def _round_positive_half_up(value: float) -> int:
     return int(np.floor(float(value) + 0.5))
-
-
-def _finite_segment_bounds(ecg: np.ndarray, sample_index: int) -> tuple[int, int]:
-    segment_start = sample_index
-    while segment_start > 0 and np.isfinite(ecg[segment_start - 1]):
-        segment_start -= 1
-
-    segment_end = sample_index
-    while segment_end + 1 < ecg.size and np.isfinite(ecg[segment_end + 1]):
-        segment_end += 1
-
-    return segment_start, segment_end

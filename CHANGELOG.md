@@ -2,6 +2,12 @@
 
 This file is the authoritative release history. GitHub Releases reuse the corresponding version section.
 
+## 0.3.3 - 2026-08-18
+
+- Optimized `tools.snap_to_peak` by indexing NaN gaps once and reusing finite-segment boundaries, eliminating repeated full-signal scans while preserving refined detections.
+- Added a fast path for finite ECG signals and logarithmic gap lookup for signals containing NaN segments.
+- Updated GitHub workflows to `actions/checkout@v7` and `actions/setup-python@v7`, removing the deprecated Node.js 20 action runtime.
+
 ## 0.3.2 - 2026-08-18
 
 - Optimized `hrv.osp` by applying the orthogonal projection associatively, avoiding the square projection matrix while preserving the defined decomposition.
