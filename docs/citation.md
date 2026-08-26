@@ -1,0 +1,41 @@
+---
+title: Citation
+---
+
+# Cite Biosigpy
+
+Research using Biosigpy should cite both the exact released Biosigpy version
+that was executed and the original publications for every scientific method
+used.
+
+## Identify the version
+
+Obtain the installed version in Python:
+
+```python
+import biosigpy
+
+print(biosigpy.__version__)
+```
+
+Biosigpy does not yet have a Zenodo record. Until the repository is enabled in
+Zenodo and the first release is archived, cite the corresponding versioned
+GitHub Release page, such as [Biosigpy v0.3.3](https://github.com/BSICoS/biosigpy/releases/tag/v0.3.3)
+for version 0.3.3. After Zenodo archiving begins, select the version used and
+cite its version-specific DOI.
+
+GitHub provides citation formats generated from the project's structured
+metadata.
+
+## Cite the methods
+
+Find the original publications for each method in the
+[Biosiglib method catalog](https://bsicos.github.io/biosiglib/methods/).
+Biosiglib is the language-independent contract and reference catalog, not the
+executable software citation.
+
+## Unreleased code
+
+If the analysis used an unreleased commit, cite the
+[Biosigpy repository](https://github.com/BSICoS/biosigpy) together with the full
+commit SHA instead of a released version.

@@ -20,15 +20,21 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Verify tag and extract release notes
+      - name: Install release validation tooling
+        run: python -m pip install "cffconvert>=2.0,<3"
+
+      - name: Validate citation metadata, tag, and changelog
         env:
           RELEASE_TAG: ${{ github.ref_name }}
         run: |
+          cffconvert --validate
           python - <<'PY'
           import os
           import re
           import runpy
           from pathlib import Path
+
+          from ruamel.yaml import YAML
 
           version = runpy.run_path("src/biosigpy/_version.py")["__version__"]
           expected_tag = f"v{version}"
@@ -36,13 +42,30 @@ jobs:
           if actual_tag != expected_tag:
               raise SystemExit(f"Tag {actual_tag!r} does not match {expected_tag!r}")
 
+          citation = YAML(typ="safe").load(
+              Path("CITATION.cff").read_text(encoding="utf-8")
+          )
+          citation_version = str(citation["version"])
+          if citation_version != version:
+              raise SystemExit(
+                  f"CITATION.cff version {citation_version!r} does not match {version!r}"
+              )
+
           changelog = Path("CHANGELOG.md").read_text(encoding="utf-8")
           heading = re.compile(
-              rf"^## {re.escape(version)}(?:\s+-[^\n]*)?\s*$", re.MULTILINE
+              rf"^## {re.escape(version)} - (\d{{4}}-\d{{2}}-\d{{2}})\s*$",
+              re.MULTILINE,
           )
           match = heading.search(changelog)
           if match is None:
-              raise SystemExit(f"CHANGELOG.md has no section for {version}")
+              raise SystemExit(f"CHANGELOG.md has no dated section for {version}")
+          release_date = citation["date-released"]
+          release_date = getattr(release_date, "isoformat", lambda: str(release_date))()
+          if release_date != match.group(1):
+              raise SystemExit(
+                  "CITATION.cff date-released does not match CHANGELOG.md: "
+                  f"{release_date!r} != {match.group(1)!r}"
+              )
           next_heading = re.search(r"^## ", changelog[match.end():], re.MULTILINE)
           end = match.end() + next_heading.start() if next_heading else len(changelog)
           Path("release-notes.md").write_text(
@@ -71,6 +94,7 @@ jobs:
           suffixes = {
               "biosiglib.lock",
               "CHANGELOG.md",
+              "CITATION.cff",
               "tests/conftest.py",
               "tests/conformance.py",
           }

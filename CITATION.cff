@@ -1,0 +1,34 @@
+cff-version: 1.2.0
+message: >-
+  Cite the exact Biosigpy version used and the original publications for every
+  scientific method used.
+title: Biosigpy
+type: software
+authors:
+  - given-names: Diego
+    family-names: Cajal
+    orcid: "https://orcid.org/0000-0001-6606-2034"
+    affiliation: >-
+      Centro de Investigación Biomédica en Red en Bioingeniería, Biomateriales
+      y Nanomedicina (CIBER-BBN), Instituto de Salud Carlos III, Madrid, Spain;
+      Biomedical Signal Interpretation and Computational Simulation (BSICoS)
+      Group, Aragón Institute of Engineering Research (I3A), University of
+      Zaragoza, Spain
+  - given-names: Pablo
+    family-names: Armañac-Julián
+    orcid: "https://orcid.org/0000-0001-5918-1043"
+    affiliation: >-
+      Centro de Investigación Biomédica en Red en Bioingeniería, Biomateriales
+      y Nanomedicina (CIBER-BBN), Instituto de Salud Carlos III, Madrid, Spain;
+      Biomedical Signal Interpretation and Computational Simulation (BSICoS)
+      Group, Aragón Institute of Engineering Research (I3A), University of
+      Zaragoza, Spain
+version: 0.3.3
+date-released: 2026-08-18
+license: GPL-3.0-only
+repository-code: "https://github.com/BSICoS/biosigpy"
+repository-artifact: "https://pypi.org/project/biosigpy/"
+url: "https://bsicos.github.io/biosigpy/"
+abstract: >-
+  Biosigpy is the Python biomedical signal-processing implementation maintained
+  by the BSICoS Research Group.
