@@ -20,6 +20,11 @@ Python 3.10–3.13, NumPy 1.26.4 or newer, and SciPy 1.11.4 or newer are support
 
 The [Biosigpy documentation](https://bsicos.github.io/biosigpy/) contains the Python API, with direct links to executable example code. For practical method descriptions, expected inputs and outputs, scientific references, and links to the MATLAB implementation, use the [Biosiglib method catalog](https://bsicos.github.io/biosiglib/methods/). See the [changelog](CHANGELOG.md) for the release history.
 
+## Citation
+
+Cite the exact Biosigpy version used and the original publications for its
+scientific methods. See the full [citation guide](https://bsicos.github.io/biosigpy/citation/).
+
 ## Support and license
 
 Report problems through [GitHub Issues](https://github.com/BSICoS/biosigpy/issues). Biosigpy is distributed under the [GNU General Public License version 3](LICENSE).
