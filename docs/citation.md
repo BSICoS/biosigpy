@@ -18,11 +18,8 @@ import biosigpy
 print(biosigpy.__version__)
 ```
 
-Biosigpy does not yet have a Zenodo record. Until the repository is enabled in
-Zenodo and the first release is archived, cite the corresponding versioned
-GitHub Release page, such as [Biosigpy v0.3.4](https://github.com/BSICoS/biosigpy/releases/tag/v0.3.4)
-for version 0.3.4. After Zenodo archiving begins, select the version used and
-cite its version-specific DOI.
+Use the [Biosigpy Zenodo collection](https://doi.org/10.5281/zenodo.22112727)
+to select the version that was executed and cite its version-specific DOI.
 
 GitHub provides citation formats generated from the project's structured
 metadata.
