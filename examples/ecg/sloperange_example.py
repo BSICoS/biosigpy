@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from biosigpy.ecg import sloperange
-from biosigpy.tools import lpd_filter, nan_filter
+from biosigpy.tools import lpdfilter, nanfilter
 
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[2]
@@ -71,10 +71,10 @@ def main() -> None:
     respiration = signals["respiration"]
     r_wave_times = timing["r_wave_times"]
 
-    derivative_filter, _ = lpd_filter(
+    derivative_filter, _ = lpdfilter(
         sampling_frequency, 50.0, order=4
     )
-    derivative_ecg = nan_filter(
+    derivative_ecg = nanfilter(
         derivative_filter, [1.0], ecg, max_gap=0
     )
     slope_range = sloperange(

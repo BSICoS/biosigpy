@@ -4,6 +4,8 @@ This file is the authoritative release history. GitHub Releases reuse the corres
 
 ## Unreleased
 
+- Breaking: renamed the public nan_filter, nan_filtfilt, lpd_filter, and snap_to_peak functions and modules to nanfilter, nanfiltfilt, lpdfilter, and snaptopeak. Updated imports, examples, tests, and API documentation; numerical behavior is unchanged.
+
 - Added expandnans with symmetric original-mask expansion, explicit half-way rounding, and shared analytical cases.
 
 - Added tools.trimnans, shared conformance tests, and Python API documentation.

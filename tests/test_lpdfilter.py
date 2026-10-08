@@ -1,9 +1,9 @@
-"""Conformance tests for tools.lpd_filter."""
+"""Conformance tests for tools.lpdfilter."""
 
 import numpy as np
 import pytest
 
-from biosigpy.tools.lpd_filter import lpd_filter
+from biosigpy.tools.lpdfilter import lpdfilter
 from conformance import (
     assert_expected_error,
     assert_expected_outputs,
@@ -16,12 +16,12 @@ from conformance import (
 
 @pytest.mark.parametrize(
     "case_definition",
-    cases_for_specification("tools.lpd_filter"),
+    cases_for_specification("tools.lpdfilter"),
     ids=case_id,
 )
 def test_conformance(case_definition: dict[str, object]) -> None:
     parameters = case_definition["parameters"]
-    run_case = lambda: lpd_filter(
+    run_case = lambda: lpdfilter(
         load_input(case_definition, "sampling_frequency"),
         load_input(case_definition, "stop_frequency"),
         parameters.get("pass_frequency"),
@@ -63,12 +63,12 @@ def test_python_validation(
     arguments.update(kwargs)
 
     with pytest.raises(exception_type):
-        lpd_filter(**arguments)
+        lpdfilter(**arguments)
 
 
 def test_odd_explicit_order_rounds_up_to_even() -> None:
-    coefficients_odd, delay_odd = lpd_filter(256.0, 12.0, 10.0, order=5)
-    coefficients_even, delay_even = lpd_filter(256.0, 12.0, 10.0, order=6)
+    coefficients_odd, delay_odd = lpdfilter(256.0, 12.0, 10.0, order=5)
+    coefficients_even, delay_even = lpdfilter(256.0, 12.0, 10.0, order=6)
 
     np.testing.assert_allclose(coefficients_odd, coefficients_even, rtol=0.0)
     assert delay_odd == delay_even == 3.0
@@ -76,4 +76,4 @@ def test_odd_explicit_order_rounds_up_to_even() -> None:
 
 def test_automatic_order_is_explicitly_unsupported() -> None:
     with pytest.raises(NotImplementedError):
-        lpd_filter(256.0, 12.0)
+        lpdfilter(256.0, 12.0)

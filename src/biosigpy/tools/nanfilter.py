@@ -1,4 +1,4 @@
-"""Zero-phase filtering with NaN-aware gap handling."""
+"""Causal filtering with NaN-aware gap handling."""
 
 import numpy as np
 from numpy.typing import ArrayLike
@@ -7,10 +7,10 @@ from scipy import signal
 from biosigpy.tools._nan_processing import parse_nan_filtering, process_nan_signal
 
 
-def nan_filtfilt(
+def nanfilter(
     b: ArrayLike, a: ArrayLike, x: ArrayLike, max_gap: int = 0
 ) -> np.ndarray:
-    """Zero-phase filter a signal with NaN-aware gap handling.
+    """Causally filter a signal with NaN-aware gap handling.
 
     Parameters
     ----------
@@ -27,8 +27,7 @@ def nan_filtfilt(
     Returns
     -------
     numpy.ndarray
-        One-dimensional zero-phase filtered signal with the same length as
-        ``x``.
+        One-dimensional filtered signal with the same length as ``x``.
 
     Raises
     ------
@@ -40,50 +39,28 @@ def nan_filtfilt(
 
     Notes
     -----
-    This function implements the Biosiglib ``tools.nan_filtfilt``
-    specification. Filtering is zero-phase and uses
-    :func:`scipy.signal.filtfilt` on each valid finite segment.
+    Filtering is causal and uses :func:`scipy.signal.lfilter` on each valid
+    finite segment.
 
     Boundary ``NaN`` gaps are preserved. Internal short gaps with length less
     than or equal to ``max_gap`` are interpolated before filtering. Internal
     long gaps with length greater than ``max_gap`` are preserved and split the
-    signal into separate segments. Segments that are too short for zero-phase
+    signal into separate segments. Segments that are too short for causal
     filtering return ``NaN``.
 
     Examples
     --------
     >>> import numpy as np
-    >>> from biosigpy.tools import nan_filtfilt
-    >>> b = np.array([0.25, 0.5, 0.25])
+    >>> from biosigpy.tools import nanfilter
+    >>> b = np.array([0.5, 0.5])
     >>> a = np.array([1.0])
-    >>> x = np.linspace(0.0, 1.0, 20)
-    >>> x[8] = np.nan
-    >>> nan_filtfilt(b, a, x, max_gap=1).shape
-    (20,)
+    >>> x = np.array([1.0, np.nan, 3.0, 4.0])
+    >>> nanfilter(b, a, x, max_gap=1).shape
+    (4,)
     """
 
     b, a, x, max_gap = parse_nan_filtering(b, a, x, max_gap)
-    filter_order = max(b.size - 1, a.size - 1)
-    minimum_segment_length = 3 * filter_order + 1
-    padlen = 3 * filter_order
-
-    if filter_order == 0:
-        if a[0] == 0:
-            raise ValueError("a[0] must be nonzero")
-        zero_phase_gain = (b[0] / a[0]) ** 2
-
-        def filter_func(
-            b: np.ndarray, a: np.ndarray, segment_filled: np.ndarray
-        ) -> np.ndarray:
-            return segment_filled * zero_phase_gain
-
-    else:
-
-        def filter_func(
-            b: np.ndarray, a: np.ndarray, segment_filled: np.ndarray
-        ) -> np.ndarray:
-            return signal.filtfilt(b, a, segment_filled, padlen=padlen)
-
+    minimum_segment_length = max(b.size, a.size)
     return process_nan_signal(
-        b, a, x, max_gap, filter_func, minimum_segment_length
+        b, a, x, max_gap, signal.lfilter, minimum_segment_length
     )

@@ -25,10 +25,10 @@ The API pages document Python signatures and link to executable examples. For ex
 
 | Function | Description |
 | --- | --- |
-| [`lpd_filter`](tools/lpd-filter.md) | Apply the low-pass differentiator used by detection algorithms. |
+| [`lpdfilter`](tools/lpdfilter.md) | Apply the low-pass differentiator used by detection algorithms. |
 | [`medfilt_threshold`](tools/medfilt-threshold.md) | Compute a median-filtered adaptive threshold. |
-| [`nan_filter`](tools/nan-filter.md) | Filter data while preserving NaN gaps. |
-| [`nan_filtfilt`](tools/nan-filtfilt.md) | Apply zero-phase filtering while preserving NaN gaps. |
-| [`snap_to_peak`](tools/snap-to-peak.md) | Refine event positions by snapping them to nearby peaks. |
+| [`nanfilter`](tools/nanfilter.md) | Filter data while preserving NaN gaps. |
+| [`nanfiltfilt`](tools/nanfiltfilt.md) | Apply zero-phase filtering while preserving NaN gaps. |
+| [`snaptopeak`](tools/snaptopeak.md) | Refine event positions by snapping them to nearby peaks. |
 | [`trimnans`](tools/trimnans.md) | Trim boundary NaNs while preserving internal gaps. |
 | [`expandnans`](tools/expandnans.md) | Expand original NaN gaps by a time radius. |

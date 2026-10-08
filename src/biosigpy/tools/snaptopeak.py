@@ -6,7 +6,7 @@ from numpy.typing import ArrayLike
 from biosigpy.tools._validation import as_positive_real_scalar, as_real_vector
 
 
-def snap_to_peak(
+def snaptopeak(
     ecg: ArrayLike, detections: ArrayLike, window_size: float = 20
 ) -> np.ndarray:
     """Refine one-based detection positions to local ECG maxima.
@@ -43,8 +43,7 @@ def snap_to_peak(
 
     Notes
     -----
-    This function implements the Biosiglib ``tools.snap_to_peak``
-    specification. The public API uses one-based sample coordinates for
+    The public API uses one-based sample coordinates for
     Biosiglib and Biosigmat compatibility. Python callers using zero-based
     indices must convert at the API boundary.
 
@@ -56,9 +55,9 @@ def snap_to_peak(
     Examples
     --------
     >>> import numpy as np
-    >>> from biosigpy.tools import snap_to_peak
+    >>> from biosigpy.tools import snaptopeak
     >>> ecg = np.array([0.1, 0.4, 1.0, 0.5, 0.2])
-    >>> snap_to_peak(ecg, np.array([2.0]), window_size=2)
+    >>> snaptopeak(ecg, np.array([2.0]), window_size=2)
     array([3.])
     """
 

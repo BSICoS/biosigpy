@@ -1,9 +1,9 @@
-"""Conformance tests for tools.snap_to_peak."""
+"""Conformance tests for tools.snaptopeak."""
 
 import numpy as np
 import pytest
 
-from biosigpy.tools.snap_to_peak import snap_to_peak
+from biosigpy.tools.snaptopeak import snaptopeak
 from conformance import (
     assert_expected_error,
     assert_expected_outputs,
@@ -16,12 +16,12 @@ from conformance import (
 
 @pytest.mark.parametrize(
     "case_definition",
-    cases_for_specification("tools.snap_to_peak"),
+    cases_for_specification("tools.snaptopeak"),
     ids=case_id,
 )
 def test_conformance(case_definition: dict[str, object]) -> None:
     parameters = case_definition["parameters"]
-    run_case = lambda: snap_to_peak(
+    run_case = lambda: snaptopeak(
         load_input(case_definition, "ecg"),
         load_input(case_definition, "detections"),
         parameters.get("window_size", 20),
@@ -58,11 +58,11 @@ def test_python_validation(
     arguments.update(kwargs)
 
     with pytest.raises(exception_type):
-        snap_to_peak(**arguments)
+        snaptopeak(**arguments)
 
 
 def test_empty_detections_returns_empty() -> None:
-    refined_detections = snap_to_peak([1.0, 2.0], [])
+    refined_detections = snaptopeak([1.0, 2.0], [])
 
     assert np.issubdtype(refined_detections.dtype, np.number)
     assert refined_detections.ndim == 1
@@ -70,6 +70,6 @@ def test_empty_detections_returns_empty() -> None:
 
 
 def test_first_maximum_wins_for_ties() -> None:
-    refined_detections = snap_to_peak([0.0, 5.0, 5.0, 1.0], [3.0], window_size=2)
+    refined_detections = snaptopeak([0.0, 5.0, 5.0, 1.0], [3.0], window_size=2)
 
     np.testing.assert_array_equal(refined_detections, np.array([2.0]))
