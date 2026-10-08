@@ -5,3 +5,5 @@ arrange:
   - nan-filter.md
   - nan-filtfilt.md
   - lpd-filter.md
+  - trimnans.md
+  - expandnans.md

@@ -30,3 +30,5 @@ The API pages document Python signatures and link to executable examples. For ex
 | [`nan_filter`](tools/nan-filter.md) | Filter data while preserving NaN gaps. |
 | [`nan_filtfilt`](tools/nan-filtfilt.md) | Apply zero-phase filtering while preserving NaN gaps. |
 | [`snap_to_peak`](tools/snap-to-peak.md) | Refine event positions by snapping them to nearby peaks. |
+| [`trimnans`](tools/trimnans.md) | Trim boundary NaNs while preserving internal gaps. |
+| [`expandnans`](tools/expandnans.md) | Expand original NaN gaps by a time radius. |

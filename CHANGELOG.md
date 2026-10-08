@@ -2,6 +2,12 @@
 
 This file is the authoritative release history. GitHub Releases reuse the corresponding version section.
 
+## Unreleased
+
+- Added expandnans with symmetric original-mask expansion, explicit half-way rounding, and shared analytical cases.
+
+- Added tools.trimnans, shared conformance tests, and Python API documentation.
+
 ## 0.3.3 - 2026-08-18
 
 - Optimized `tools.snap_to_peak` by indexing NaN gaps once and reusing finite-segment boundaries, eliminating repeated full-signal scans while preserving refined detections.
