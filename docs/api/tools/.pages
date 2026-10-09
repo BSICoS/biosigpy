@@ -7,3 +7,4 @@ arrange:
   - lpdfilter.md
   - trimnans.md
   - expandnans.md
+  - interpgap.md

@@ -7,8 +7,10 @@ from biosigpy.tools.nanfiltfilt import nanfiltfilt
 from biosigpy.tools.snaptopeak import snaptopeak
 from biosigpy.tools.trimnans import trimnans
 from biosigpy.tools.expandnans import expandnans
+from biosigpy.tools.interpgap import interpgap
 
 __all__ = [
+    "interpgap",
     "lpdfilter",
     "medfilt_threshold",
     "nanfilter",
