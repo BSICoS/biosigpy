@@ -10,3 +10,4 @@ arrange:
   - interpgap.md
   - findsequences.md
   - slicesignal.md
+  - localmax.md

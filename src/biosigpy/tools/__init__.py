@@ -10,8 +10,10 @@ from biosigpy.tools.expandnans import expandnans
 from biosigpy.tools.interpgap import interpgap
 from biosigpy.tools.findsequences import findsequences
 from biosigpy.tools.slicesignal import slicesignal
+from biosigpy.tools.localmax import localmax
 
 __all__ = [
+    "localmax",
     "slicesignal",
     "findsequences",
     "interpgap",

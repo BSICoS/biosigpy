@@ -4,6 +4,8 @@ This file is the authoritative release history. GitHub Releases reuse the corres
 
 ## Unreleased
 
+- Added localmax with vector and matrix axis support and zero-based sample positions.
+
 - Added slicesignal with windows as rows, optional tail padding, and nominal time centers.
 
 - Added findsequences with zero-based inclusive run boundaries, exact equality, category ordering, and shared conformance coverage.
