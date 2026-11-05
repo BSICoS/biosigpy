@@ -4,6 +4,8 @@ This file is the authoritative release history. GitHub Releases reuse the corres
 
 ## Unreleased
 
+- Added findsequences with zero-based inclusive run boundaries, exact equality, category ordering, and shared conformance coverage.
+
 - Added interpgap with linear, nearest, PCHIP, and not-a-knot spline interpolation and shared conformance coverage.
 
 - Breaking: renamed the public nan_filter, nan_filtfilt, lpd_filter, and snap_to_peak functions and modules to nanfilter, nanfiltfilt, lpdfilter, and snaptopeak. Updated imports, examples, tests, and API documentation; numerical behavior is unchanged.

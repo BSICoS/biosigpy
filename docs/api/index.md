@@ -32,3 +32,4 @@ The API pages document Python signatures and link to executable examples. For ex
 | [`snaptopeak`](tools/snaptopeak.md) | Refine event positions by snapping them to nearby peaks. |
 | [`trimnans`](tools/trimnans.md) | Trim boundary NaNs while preserving internal gaps. |
 | [`expandnans`](tools/expandnans.md) | Expand original NaN gaps by a time radius. |
+| [`findsequences`](tools/findsequences.md) | Locate repeated values with zero-based inclusive run boundaries. |

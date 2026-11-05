@@ -8,3 +8,4 @@ arrange:
   - trimnans.md
   - expandnans.md
   - interpgap.md
+  - findsequences.md
