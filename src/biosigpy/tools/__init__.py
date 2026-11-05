@@ -9,8 +9,10 @@ from biosigpy.tools.trimnans import trimnans
 from biosigpy.tools.expandnans import expandnans
 from biosigpy.tools.interpgap import interpgap
 from biosigpy.tools.findsequences import findsequences
+from biosigpy.tools.slicesignal import slicesignal
 
 __all__ = [
+    "slicesignal",
     "findsequences",
     "interpgap",
     "lpdfilter",

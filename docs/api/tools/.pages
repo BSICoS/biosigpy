@@ -9,3 +9,4 @@ arrange:
   - expandnans.md
   - interpgap.md
   - findsequences.md
+  - slicesignal.md
