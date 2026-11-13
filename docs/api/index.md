@@ -10,6 +10,12 @@ The API pages document Python signatures and link to executable examples. For ex
 | [`pantompkins`](ecg/pantompkins.md) | Detect ECG R waves and expose the processing signals. |
 | [`sloperange`](ecg/sloperange.md) | Derive a respiration signal from ECG slopes. |
 
+## PPG
+
+| Function | Description |
+| --- | --- |
+| [`hjorth_artifacts`](ppg/hjorth-artifacts.md) | Detect artifacts from windowed Hjorth descriptors. |
+
 ## HRV
 
 | Function | Description |
