@@ -11,8 +11,10 @@ from biosigpy.tools.interpgap import interpgap
 from biosigpy.tools.findsequences import findsequences
 from biosigpy.tools.slicesignal import slicesignal
 from biosigpy.tools.localmax import localmax
+from biosigpy.tools.hjorth import hjorth
 
 __all__ = [
+    "hjorth",
     "localmax",
     "slicesignal",
     "findsequences",

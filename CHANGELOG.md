@@ -4,6 +4,8 @@ This file is the authoritative release history. GitHub Releases reuse the corres
 
 ## Unreleased
 
+- Added hjorth with mean-square power, mobility, frequency spread, and shared conformance coverage.
+
 - Added localmax with vector and matrix axis support and zero-based sample positions.
 
 - Added slicesignal with windows as rows, optional tail padding, and nominal time centers.

@@ -35,3 +35,4 @@ The API pages document Python signatures and link to executable examples. For ex
 | [`findsequences`](tools/findsequences.md) | Locate repeated values with zero-based inclusive run boundaries. |
 | [`slicesignal`](tools/slicesignal.md) | Slice signals into overlapping windows. |
 | [`localmax`](tools/localmax.md) | Find the highest local peak along a signal axis. |
+| [`hjorth`](tools/hjorth.md) | Compute mean-square activity, mobility, and frequency spread. |
