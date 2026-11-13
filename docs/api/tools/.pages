@@ -1,7 +1,17 @@
 title: Tools
 arrange:
   - medfilt-threshold.md
-  - snap-to-peak.md
-  - nan-filter.md
-  - nan-filtfilt.md
-  - lpd-filter.md
+  - snaptopeak.md
+  - nanfilter.md
+  - nanfiltfilt.md
+  - lpdfilter.md
+  - trimnans.md
+  - expandnans.md
+  - interpgap.md
+  - findsequences.md
+  - slicesignal.md
+  - localmax.md
+  - hjorth.md
+  - nanpwelch.md
+  - peakedness.md
+  - ispeaky.md

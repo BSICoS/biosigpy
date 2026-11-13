@@ -1,15 +1,37 @@
 """Signal processing utility functions."""
 
-from biosigpy.tools.lpd_filter import lpd_filter
+from biosigpy.tools.lpdfilter import lpdfilter
 from biosigpy.tools.medfilt_threshold import medfilt_threshold
-from biosigpy.tools.nan_filter import nan_filter
-from biosigpy.tools.nan_filtfilt import nan_filtfilt
-from biosigpy.tools.snap_to_peak import snap_to_peak
+from biosigpy.tools.nanfilter import nanfilter
+from biosigpy.tools.nanfiltfilt import nanfiltfilt
+from biosigpy.tools.snaptopeak import snaptopeak
+from biosigpy.tools.trimnans import trimnans
+from biosigpy.tools.expandnans import expandnans
+from biosigpy.tools.interpgap import interpgap
+from biosigpy.tools.findsequences import findsequences
+from biosigpy.tools.slicesignal import slicesignal
+from biosigpy.tools.localmax import localmax
+from biosigpy.tools.hjorth import hjorth
+from biosigpy.tools.nanpwelch import NanPwelchWarning, nanpwelch
+
+from biosigpy.tools.peakedness import peakedness
+from biosigpy.tools.ispeaky import ispeaky
 
 __all__ = [
-    "lpd_filter",
+    "peakedness",
+    "ispeaky",
+    "nanpwelch",
+    "NanPwelchWarning",
+    "hjorth",
+    "localmax",
+    "slicesignal",
+    "findsequences",
+    "interpgap",
+    "lpdfilter",
     "medfilt_threshold",
-    "nan_filter",
-    "nan_filtfilt",
-    "snap_to_peak",
+    "nanfilter",
+    "nanfiltfilt",
+    "snaptopeak",
+    "trimnans",
+    "expandnans",
 ]

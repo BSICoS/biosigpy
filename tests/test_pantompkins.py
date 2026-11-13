@@ -55,9 +55,9 @@ def test_filters_nan_refined_detections_before_r_wave_times(
     def fake_snap_to_peak(
         ecg: np.ndarray, detections: np.ndarray, window_size: float
     ) -> np.ndarray:
-        np.testing.assert_array_equal(detections, np.array([2.0, 5.0]))
+        np.testing.assert_array_equal(detections, np.array([1.0, 4.0]))
         assert window_size == 3.0
-        return np.array([np.nan, 5.0])
+        return np.array([np.nan, 4.0])
 
     def fake_lpd_filter(
         sampling_frequency: float,
@@ -98,15 +98,15 @@ def test_filters_nan_refined_detections_before_r_wave_times(
         "butter",
         lambda *args, **kwargs: (np.array([1.0]), np.array([1.0])),
     )
-    monkeypatch.setattr(PANTOMPKINS_MODULE, "nan_filtfilt", fake_nan_filtfilt)
-    monkeypatch.setattr(PANTOMPKINS_MODULE, "nan_filter", fake_nan_filter)
+    monkeypatch.setattr(PANTOMPKINS_MODULE, "nanfiltfilt", fake_nan_filtfilt)
+    monkeypatch.setattr(PANTOMPKINS_MODULE, "nanfilter", fake_nan_filter)
     monkeypatch.setattr(
         PANTOMPKINS_MODULE.signal,
         "find_peaks",
         lambda envelope, distance: (np.array([1, 4]), {}),
     )
-    monkeypatch.setattr(PANTOMPKINS_MODULE, "lpd_filter", fake_lpd_filter)
-    monkeypatch.setattr(PANTOMPKINS_MODULE, "snap_to_peak", fake_snap_to_peak)
+    monkeypatch.setattr(PANTOMPKINS_MODULE, "lpdfilter", fake_lpd_filter)
+    monkeypatch.setattr(PANTOMPKINS_MODULE, "snaptopeak", fake_snap_to_peak)
 
     outputs = pantompkins(
         np.arange(10.0),

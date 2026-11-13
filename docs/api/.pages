@@ -2,5 +2,6 @@ title: API
 arrange:
   - index.md
   - ecg
+  - ppg
   - hrv
   - tools

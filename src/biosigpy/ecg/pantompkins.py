@@ -5,10 +5,10 @@ from numpy.typing import ArrayLike
 from scipy import signal
 
 from biosigpy.tools._validation import as_positive_real_scalar, as_real_vector
-from biosigpy.tools.lpd_filter import lpd_filter
-from biosigpy.tools.nan_filter import nan_filter
-from biosigpy.tools.nan_filtfilt import nan_filtfilt
-from biosigpy.tools.snap_to_peak import snap_to_peak
+from biosigpy.tools.lpdfilter import lpdfilter
+from biosigpy.tools.nanfilter import nanfilter
+from biosigpy.tools.nanfiltfilt import nanfiltfilt
+from biosigpy.tools.snaptopeak import snaptopeak
 
 
 def pantompkins(
@@ -60,8 +60,8 @@ def pantompkins(
     returns R-wave times and intermediate processing signals. Bandpass and
     derivative filtering use the NaN-aware public filtering tools with
     ``max_gap=0``. Peak refinement uses
-    :func:`biosigpy.tools.snap_to_peak.snap_to_peak`, and derivative filter
-    design uses :func:`biosigpy.tools.lpd_filter.lpd_filter`.
+    :func:`biosigpy.tools.snaptopeak.snaptopeak`, and derivative filter
+    design uses :func:`biosigpy.tools.lpdfilter.lpdfilter`.
 
     Examples
     --------
@@ -91,15 +91,15 @@ def pantompkins(
     b_bandpass, a_bandpass = signal.butter(
         4, bandpass, btype="bandpass", fs=fs
     )
-    ecg_filtered = nan_filtfilt(
+    ecg_filtered = nanfiltfilt(
         b_bandpass,
         a_bandpass,
         ecg_vector,
         max_gap=0,
     )
 
-    derivative_filter, _ = lpd_filter(fs, bandpass[1], order=4)
-    decg = nan_filter(
+    derivative_filter, _ = lpdfilter(fs, bandpass[1], order=4)
+    decg = nanfilter(
         derivative_filter,
         [1.0],
         ecg_filtered,
@@ -119,10 +119,10 @@ def pantompkins(
     )
     peak_indices = np.unique(np.sort(peak_indices))
     filter_edge_margin = 3 * max(b_bandpass.size, a_bandpass.size)
-    peak_indices = snap_to_peak(
-        ecg_vector, peak_indices.astype(np.float64) + 1.0, snap_to_peak_window_size
+    peak_indices = snaptopeak(
+        ecg_vector, peak_indices.astype(np.float64), snap_to_peak_window_size
     )
-    peak_indices = peak_indices[np.isfinite(peak_indices)] - 1.0
+    peak_indices = peak_indices[np.isfinite(peak_indices)]
     peak_indices = peak_indices[peak_indices >= filter_edge_margin]
 
     return {

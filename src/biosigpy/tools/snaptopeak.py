@@ -6,10 +6,10 @@ from numpy.typing import ArrayLike
 from biosigpy.tools._validation import as_positive_real_scalar, as_real_vector
 
 
-def snap_to_peak(
+def snaptopeak(
     ecg: ArrayLike, detections: ArrayLike, window_size: float = 20
 ) -> np.ndarray:
-    """Refine one-based detection positions to local ECG maxima.
+    """Refine zero-based detection positions to local ECG maxima.
 
     Parameters
     ----------
@@ -19,7 +19,7 @@ def snap_to_peak(
         Infinite values are invalid.
     detections : array_like
         One-dimensional real numeric vector of approximate detection positions
-        in one-based sample coordinates. Empty input is allowed. ``NaN``
+        in zero-based sample coordinates. Empty input is allowed. ``NaN``
         detections return ``NaN`` in the aligned output position. Infinite
         values are invalid.
     window_size : float, optional
@@ -29,7 +29,7 @@ def snap_to_peak(
     Returns
     -------
     numpy.ndarray
-        One-dimensional array of refined detections in one-based sample
+        One-dimensional array of refined detections in zero-based sample
         coordinates, aligned with ``detections``.
 
     Raises
@@ -39,14 +39,13 @@ def snap_to_peak(
     ValueError
         If ``ecg`` is empty, has fewer than two samples, is not a vector,
         contains infinite values, if finite detections are outside
-        ``[1, len(ecg)]``, or if ``window_size`` is not positive.
+        ``[0, len(ecg) - 1]``, or if ``window_size`` is not positive.
 
     Notes
     -----
-    This function implements the Biosiglib ``tools.snap_to_peak``
-    specification. The public API uses one-based sample coordinates for
-    Biosiglib and Biosigmat compatibility. Python callers using zero-based
-    indices must convert at the API boundary.
+    Detection positions use native zero-based sample coordinates. Fractional
+    positions and the search radius round to the nearest integer, with exact
+    half-way values rounded upward.
 
     Search windows never cross ``NaN`` ECG gaps. If a finite detection points
     to a ``NaN`` ECG sample, the aligned output value is ``NaN``. When multiple
@@ -56,10 +55,10 @@ def snap_to_peak(
     Examples
     --------
     >>> import numpy as np
-    >>> from biosigpy.tools import snap_to_peak
+    >>> from biosigpy.tools import snaptopeak
     >>> ecg = np.array([0.1, 0.4, 1.0, 0.5, 0.2])
-    >>> snap_to_peak(ecg, np.array([2.0]), window_size=2)
-    array([3.])
+    >>> snaptopeak(ecg, np.array([2.0]), window_size=2)
+    array([2.])
     """
 
     ecg = as_real_vector(ecg, name="ecg")
@@ -75,8 +74,8 @@ def snap_to_peak(
         raise ValueError("detections must not contain infinite values")
 
     finite_detections = detections[np.isfinite(detections)]
-    if np.any((finite_detections < 1) | (finite_detections > ecg.size)):
-        raise ValueError("detections must be between 1 and len(ecg)")
+    if np.any((finite_detections < 0) | (finite_detections > ecg.size - 1)):
+        raise ValueError("detections must be between 0 and len(ecg) - 1")
 
     window_size = as_positive_real_scalar(window_size, name="window_size")
     window_size = _round_positive_half_up(window_size)
@@ -92,7 +91,7 @@ def snap_to_peak(
             refined_detections[detection_index] = np.nan
             continue
 
-        current_detection = _round_positive_half_up(current_detection) - 1
+        current_detection = _round_positive_half_up(current_detection)
         if np.isnan(ecg[current_detection]):
             refined_detections[detection_index] = np.nan
             continue
@@ -117,7 +116,7 @@ def snap_to_peak(
         window_end = min(segment_end, current_detection + window_size)
         window_signal = ecg[window_start : window_end + 1]
         local_index = int(np.argmax(window_signal))
-        refined_detections[detection_index] = window_start + local_index + 1
+        refined_detections[detection_index] = window_start + local_index
 
     return refined_detections
 

@@ -6,13 +6,13 @@ from scipy import special
 from biosigpy.tools._validation import as_integer_scalar, as_positive_real_scalar
 
 
-def lpd_filter(
+def lpdfilter(
     sampling_frequency: float,
     stop_frequency: float,
     pass_frequency: float | None = None,
     order: int | None = None,
 ) -> tuple[np.ndarray, float]:
-    """Design a Biosiglib-compatible low-pass differentiator FIR filter.
+    """Design a low-pass differentiator FIR filter.
 
     Parameters
     ----------
@@ -45,9 +45,6 @@ def lpd_filter(
 
     Notes
     -----
-    This function implements the Biosiglib ``tools.lpd_filter`` specification
-    and follows the MATLAB/Biosigmat-compatible low-pass differentiator design.
-
     Explicit ``order`` design is supported. Automatic order selection is not
     currently implemented. The effective order is rounded up to an even value.
     Coefficients are scaled by ``sampling_frequency / (2*pi)``, and the
@@ -55,8 +52,8 @@ def lpd_filter(
 
     Examples
     --------
-    >>> from biosigpy.tools import lpd_filter
-    >>> b, delay = lpd_filter(256.0, 12.0, order=4)
+    >>> from biosigpy.tools import lpdfilter
+    >>> b, delay = lpdfilter(256.0, 12.0, order=4)
     >>> b.shape
     (5,)
     >>> delay
@@ -78,7 +75,7 @@ def lpd_filter(
         raise ValueError("pass_frequency must be less than stop_frequency")
 
     if order is None:
-        raise NotImplementedError("automatic lpd_filter order is not supported")
+        raise NotImplementedError("automatic lpdfilter order is not supported")
     filter_order = as_integer_scalar(order, name="order")
     if filter_order <= 0:
         raise ValueError("order must be positive")

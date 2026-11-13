@@ -2,6 +2,36 @@
 
 This file is the authoritative release history. GitHub Releases reuse the corresponding version section.
 
+## Unreleased
+
+## 1.0.0-beta - 2026-11-13
+
+- Prepared the first 1.x beta with exact Biosiglib conformance, full release-time tests, and normalized Python package versions.
+
+- Added peakedness and ispeaky with band concentration, relative peak height and inclusive threshold classification.
+
+- Added nanpwelch with rectangular or explicit windows, NaN-aware segmentation, channel alignment and modulo folding for short FFTs.
+
+- Added ppg.hjorth_artifacts with shared Hjorth window decisions and time-based artifact merging.
+
+- Breaking: snaptopeak now accepts and returns zero-based sample positions. Updated pantompkins to use native indices throughout without changing R-wave times.
+
+- Added hjorth with mean-square power, mobility, frequency spread, and shared conformance coverage.
+
+- Added localmax with vector and matrix axis support and zero-based sample positions.
+
+- Added slicesignal with windows as rows, optional tail padding, and nominal time centers.
+
+- Added findsequences with zero-based inclusive run boundaries, exact equality, category ordering, and shared conformance coverage.
+
+- Added interpgap with linear, nearest, PCHIP, and not-a-knot spline interpolation and shared conformance coverage.
+
+- Breaking: renamed the public nan_filter, nan_filtfilt, lpd_filter, and snap_to_peak functions and modules to nanfilter, nanfiltfilt, lpdfilter, and snaptopeak. Updated imports, examples, tests, and API documentation; numerical behavior is unchanged.
+
+- Added expandnans with symmetric original-mask expansion, explicit half-way rounding, and shared analytical cases.
+
+- Added tools.trimnans, shared conformance tests, and Python API documentation.
+
 ## 0.3.4 - 2026-08-26
 
 - Added CFF 1.2.0 metadata for citing the exact Biosigpy release and its confirmed software authors.

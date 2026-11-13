@@ -14,6 +14,8 @@ Install the latest release and its required dependencies directly from PyPI:
 python -m pip install biosigpy
 ```
 
+Beta releases are awaiting validation in everyday use. To include beta releases when updating, use `python -m pip install --upgrade --pre biosigpy`; ordinary installs select stable releases by default.
+
 ## Install a downloaded release artifact
 
 The [latest GitHub release](https://github.com/BSICoS/biosigpy/releases/latest) provides the same verified wheel and source distribution published to PyPI. Install a downloaded artifact when you need an offline or explicitly archived copy:
@@ -29,7 +31,7 @@ from importlib.metadata import version
 
 import biosigpy
 
-assert version("biosigpy") == biosigpy.__version__
+print(version("biosigpy"))
 print(biosigpy.__version__)
 ```
 

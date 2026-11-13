@@ -3,7 +3,8 @@
 Executable examples for the current Biosigpy pilot algorithms.
 
 The examples use local copies of the Medicom MTD ECG fixtures under
-`examples/fixtures/ecg/`, matching the corresponding Biosigmat examples.
+`examples/fixtures/ecg/` and the PPG fixture under `examples/fixtures/ppg/`,
+matching the corresponding Biosigmat examples.
 Install the example dependencies with an editable install:
 
 ```bash
@@ -21,6 +22,7 @@ python examples/hrv/ipfm_example.py
 python examples/hrv/osp_example.py
 python examples/ecg/pantompkins_example.py
 python examples/ecg/sloperange_example.py
+python examples/ppg/hjorth_artifacts_example.py
 ```
 
 On Windows PowerShell:
@@ -34,6 +36,7 @@ python examples\hrv\ipfm_example.py
 python examples\hrv\osp_example.py
 python examples\ecg\pantompkins_example.py
 python examples\ecg\sloperange_example.py
+python examples\ppg\hjorth_artifacts_example.py
 ```
 
 Examples that generate figures open an interactive Matplotlib window when an
