@@ -32,6 +32,12 @@ This file is the authoritative release history. GitHub Releases reuse the corres
 
 - Added tools.trimnans, shared conformance tests, and Python API documentation.
 
+## 0.3.4 - 2026-08-26
+
+- Added CFF 1.2.0 metadata for citing the exact Biosigpy release and its confirmed software authors.
+- Documented version-specific software citation alongside the original publications cataloged by Biosiglib.
+- Added release validation for CFF structure, version, date, tag, and inclusion in the source distribution.
+
 ## 0.3.3 - 2026-08-18
 
 - Optimized `tools.snap_to_peak` by indexing NaN gaps once and reusing finite-segment boundaries, eliminating repeated full-signal scans while preserving refined detections.
