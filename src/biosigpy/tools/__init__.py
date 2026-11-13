@@ -14,7 +14,12 @@ from biosigpy.tools.localmax import localmax
 from biosigpy.tools.hjorth import hjorth
 from biosigpy.tools.nanpwelch import NanPwelchWarning, nanpwelch
 
+from biosigpy.tools.peakedness import peakedness
+from biosigpy.tools.ispeaky import ispeaky
+
 __all__ = [
+    "peakedness",
+    "ispeaky",
     "nanpwelch",
     "NanPwelchWarning",
     "hjorth",

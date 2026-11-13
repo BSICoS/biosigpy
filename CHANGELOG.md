@@ -4,6 +4,8 @@ This file is the authoritative release history. GitHub Releases reuse the corres
 
 ## Unreleased
 
+- Added peakedness and ispeaky with band concentration, relative peak height and inclusive threshold classification.
+
 - Added nanpwelch with rectangular or explicit windows, NaN-aware segmentation, channel alignment and modulo folding for short FFTs.
 
 - Added ppg.hjorth_artifacts with shared Hjorth window decisions and time-based artifact merging.

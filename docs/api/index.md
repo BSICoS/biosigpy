@@ -43,3 +43,5 @@ The API pages document Python signatures and link to executable examples. For ex
 | [`localmax`](tools/localmax.md) | Find the highest local peak along a signal axis. |
 | [`hjorth`](tools/hjorth.md) | Compute mean-square activity, mobility, and frequency spread. |
 | [`nanpwelch`](tools/nanpwelch.md) | Estimate PSD from valid stretches without crossing gaps. |
+| [`peakedness`](tools/peakedness.md) | Measure spectral peakedness. |
+| [`ispeaky`](tools/ispeaky.md) | Classify spectral peakedness. |
