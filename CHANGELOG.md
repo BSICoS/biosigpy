@@ -4,6 +4,10 @@ This file is the authoritative release history. GitHub Releases reuse the corres
 
 ## Unreleased
 
+## 1.0.0-beta - 2026-11-13
+
+- Prepared the first 1.x beta with exact Biosiglib conformance, full release-time tests, and normalized Python package versions.
+
 - Added peakedness and ispeaky with band concentration, relative peak height and inclusive threshold classification.
 
 - Added nanpwelch with rectangular or explicit windows, NaN-aware segmentation, channel alignment and modulo folding for short FFTs.

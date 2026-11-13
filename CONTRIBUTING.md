@@ -34,5 +34,3 @@ python -m mkdocs build --strict
 - Preserve scientific formulas, units, defaults, edge cases, and NaN behavior.
 - Do not copy specifications, fixtures, or shared cases from Biosiglib.
 - Open a pull request only after the complete test suite passes.
-
-Before tagging a release, move its entries from `Unreleased` to a dated version section in `CHANGELOG.md`. The [release workflow](.github/workflows/release.yml) uses that section as the GitHub release notes.
