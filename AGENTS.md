@@ -12,3 +12,6 @@ Persistent project rules for coding agents working in Biosigpy:
 8. Put executable examples under `examples/` and describe what they teach a user, not their implementation ancestry.
 9. Use English for code, comments, filenames, and technical documentation. Use the repository-local `.venv`; do not commit environments, caches, editor settings, or downloaded data.
 10. Avoid generic resource APIs and unnecessary cross-language infrastructure.
+## Preserve existing code
+
+If working code does not need to change for the authorized task, leave it alone. Adapt necessary changes to the existing structure, names, and comments. Do not refactor, reorganize, or rewrite comments merely for preference. If the structure conflicts with an approved change, or a concrete improvement in semantics, duplication, or an equivalent concern warrants restructuring, explain the reason and proposed change first and wait for the user's decision, unless already explicitly authorized. Preserve analogous calculation blocks across implementations where practical while respecting language-specific syntax.
