@@ -12,8 +12,11 @@ from biosigpy.tools.findsequences import findsequences
 from biosigpy.tools.slicesignal import slicesignal
 from biosigpy.tools.localmax import localmax
 from biosigpy.tools.hjorth import hjorth
+from biosigpy.tools.nanpwelch import NanPwelchWarning, nanpwelch
 
 __all__ = [
+    "nanpwelch",
+    "NanPwelchWarning",
     "hjorth",
     "localmax",
     "slicesignal",

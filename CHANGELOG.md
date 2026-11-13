@@ -4,6 +4,8 @@ This file is the authoritative release history. GitHub Releases reuse the corres
 
 ## Unreleased
 
+- Added nanpwelch with rectangular or explicit windows, NaN-aware segmentation, channel alignment and modulo folding for short FFTs.
+
 - Added ppg.hjorth_artifacts with shared Hjorth window decisions and time-based artifact merging.
 
 - Breaking: snaptopeak now accepts and returns zero-based sample positions. Updated pantompkins to use native indices throughout without changing R-wave times.
