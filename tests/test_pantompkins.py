@@ -55,9 +55,9 @@ def test_filters_nan_refined_detections_before_r_wave_times(
     def fake_snap_to_peak(
         ecg: np.ndarray, detections: np.ndarray, window_size: float
     ) -> np.ndarray:
-        np.testing.assert_array_equal(detections, np.array([2.0, 5.0]))
+        np.testing.assert_array_equal(detections, np.array([1.0, 4.0]))
         assert window_size == 3.0
-        return np.array([np.nan, 5.0])
+        return np.array([np.nan, 4.0])
 
     def fake_lpd_filter(
         sampling_frequency: float,

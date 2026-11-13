@@ -120,9 +120,9 @@ def pantompkins(
     peak_indices = np.unique(np.sort(peak_indices))
     filter_edge_margin = 3 * max(b_bandpass.size, a_bandpass.size)
     peak_indices = snaptopeak(
-        ecg_vector, peak_indices.astype(np.float64) + 1.0, snap_to_peak_window_size
+        ecg_vector, peak_indices.astype(np.float64), snap_to_peak_window_size
     )
-    peak_indices = peak_indices[np.isfinite(peak_indices)] - 1.0
+    peak_indices = peak_indices[np.isfinite(peak_indices)]
     peak_indices = peak_indices[peak_indices >= filter_edge_margin]
 
     return {

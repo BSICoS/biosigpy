@@ -4,6 +4,8 @@ This file is the authoritative release history. GitHub Releases reuse the corres
 
 ## Unreleased
 
+- Breaking: snaptopeak now accepts and returns zero-based sample positions. Updated pantompkins to use native indices throughout without changing R-wave times.
+
 - Added hjorth with mean-square power, mobility, frequency spread, and shared conformance coverage.
 
 - Added localmax with vector and matrix axis support and zero-based sample positions.
