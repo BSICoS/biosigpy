@@ -2,9 +2,7 @@
 
 from __future__ import annotations
 
-import argparse
 import csv
-import sys
 from pathlib import Path
 
 import matplotlib.pyplot as plt
@@ -15,10 +13,6 @@ from biosigpy.ecg import baselineremove
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[2]
 EXAMPLES_ROOT = REPOSITORY_ROOT / "examples"
-if str(EXAMPLES_ROOT) not in sys.path:
-    sys.path.insert(0, str(EXAMPLES_ROOT))
-
-from _support.figures import add_save_figure_argument, show_or_save_figure
 
 
 SIGNAL_FIXTURE_PATH = (
@@ -35,12 +29,6 @@ TIMING_FIXTURE_PATH = (
     / "ecg"
     / "medicom_mtd_r_wave_timing.csv"
 )
-
-
-def _parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description=__doc__)
-    add_save_figure_argument(parser)
-    return parser.parse_args()
 
 
 def _load_columns(
@@ -62,7 +50,6 @@ def _load_columns(
 
 
 def main() -> None:
-    args = _parse_args()
     sampling_frequency = 256.0
     signals = _load_columns(SIGNAL_FIXTURE_PATH, ("time", "ecg"))
     timing = _load_columns(
@@ -151,7 +138,7 @@ def main() -> None:
     axes[1].grid(True)
 
     figure.tight_layout()
-    show_or_save_figure(figure, args.save_figure)
+    plt.show()
 
 
 if __name__ == "__main__":

@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import argparse
 import csv
-import sys
 from pathlib import Path
 
 import matplotlib.pyplot as plt
@@ -15,10 +14,6 @@ from biosigpy.hrv import fillgaps, removefp
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[2]
 EXAMPLES_ROOT = REPOSITORY_ROOT / "examples"
-if str(EXAMPLES_ROOT) not in sys.path:
-    sys.path.insert(0, str(EXAMPLES_ROOT))
-
-from _support.figures import add_save_figure_argument, show_or_save_figure
 
 
 TIMING_FIXTURE_PATH = (
@@ -41,7 +36,6 @@ def _parse_args() -> argparse.Namespace:
         action="store_true",
         help="pause after every interactive reconstruction attempt",
     )
-    add_save_figure_argument(parser)
     return parser.parse_args()
 
 
@@ -86,7 +80,7 @@ def main() -> None:
     axis.grid(True)
     axis.legend()
     figure.tight_layout()
-    show_or_save_figure(figure, args.save_figure)
+    plt.show()
 
 
 if __name__ == "__main__":

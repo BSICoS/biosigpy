@@ -34,8 +34,11 @@ def test_invalid_window_and_options(overrides):
 
 
 @pytest.mark.parametrize("signal", [[0, 1, 0] * 4, [2] * 12, [np.nan] * 12])
-def test_plotflag_preserves_results_and_has_four_panels(signal):
+def test_plotflag_preserves_results_and_has_four_panels(signal, monkeypatch):
     import matplotlib.pyplot as plt
+
+    shown = []
+    monkeypatch.setattr(plt, "show", lambda: shown.append(plt.gcf()))
 
     args = (signal, 1, 3, 3, [[100, 100]] * 3)
     expected_mask, expected_intervals = hjorth_artifacts(*args)
@@ -44,6 +47,7 @@ def test_plotflag_preserves_results_and_has_four_panels(signal):
     np.testing.assert_array_equal(intervals, expected_intervals)
     figure = plt.gcf()
     try:
+        assert shown == [figure]
         assert [axis.get_ylabel() for axis in figure.axes] == [
             "Input", "Activity", "Mobility", "Complexity"
         ]

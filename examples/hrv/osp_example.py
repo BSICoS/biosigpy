@@ -2,9 +2,7 @@
 
 from __future__ import annotations
 
-import argparse
 import csv
-import sys
 from pathlib import Path
 
 import matplotlib.pyplot as plt
@@ -17,21 +15,11 @@ from biosigpy.hrv import ipfm, osp
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[2]
 EXAMPLES_ROOT = REPOSITORY_ROOT / "examples"
-if str(EXAMPLES_ROOT) not in sys.path:
-    sys.path.insert(0, str(EXAMPLES_ROOT))
-
-from _support.figures import add_save_figure_argument, show_or_save_figure
 
 
 FIXTURE_ROOT = REPOSITORY_ROOT / "examples" / "fixtures" / "ecg"
 TIMING_FIXTURE_PATH = FIXTURE_ROOT / "medicom_mtd_r_wave_timing.csv"
 RESPIRATION_FIXTURE_PATH = FIXTURE_ROOT / "medicom_mtd_ecg_respiration.csv"
-
-
-def _parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description=__doc__)
-    add_save_figure_argument(parser)
-    return parser.parse_args()
 
 
 def _load_columns(path: Path, *columns: str) -> tuple[np.ndarray, ...]:
@@ -48,7 +36,6 @@ def _load_columns(path: Path, *columns: str) -> tuple[np.ndarray, ...]:
 
 
 def main() -> None:
-    args = _parse_args()
     (event_times,) = _load_columns(TIMING_FIXTURE_PATH, "r_wave_times")
     respiration_times, respiration_signal = _load_columns(
         RESPIRATION_FIXTURE_PATH, "time", "respiration"
@@ -133,7 +120,7 @@ def main() -> None:
     for axis in axes:
         axis.grid(True)
     figure.tight_layout()
-    show_or_save_figure(figure, args.save_figure)
+    plt.show()
 
 
 if __name__ == "__main__":

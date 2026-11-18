@@ -2,9 +2,7 @@
 
 from __future__ import annotations
 
-import argparse
 import csv
-import sys
 from pathlib import Path
 
 import matplotlib.pyplot as plt
@@ -15,10 +13,6 @@ from biosigpy.hrv import removefp
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[2]
 EXAMPLES_ROOT = REPOSITORY_ROOT / "examples"
-if str(EXAMPLES_ROOT) not in sys.path:
-    sys.path.insert(0, str(EXAMPLES_ROOT))
-
-from _support.figures import add_save_figure_argument, show_or_save_figure
 
 
 TIMING_FIXTURE_PATH = (
@@ -30,12 +24,6 @@ TIMING_FIXTURE_PATH = (
 )
 MATLAB_FP_INDICES_ONE_BASED = np.asarray([10, 20, 30])
 FP_OFFSETS = np.asarray([0.05, 0.08, 0.06])
-
-
-def _parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description=__doc__)
-    add_save_figure_argument(parser)
-    return parser.parse_args()
 
 
 def _load_r_wave_times() -> np.ndarray:
@@ -55,7 +43,6 @@ def _load_r_wave_times() -> np.ndarray:
 
 
 def main() -> None:
-    args = _parse_args()
     reference = _load_r_wave_times()[:50]
     fp_indices = MATLAB_FP_INDICES_ONE_BASED - 1
     false_positives = reference[fp_indices] + FP_OFFSETS
@@ -90,7 +77,7 @@ def main() -> None:
     for axis in axes:
         axis.grid(True)
     figure.tight_layout()
-    show_or_save_figure(figure, args.save_figure)
+    plt.show()
 
 
 if __name__ == "__main__":

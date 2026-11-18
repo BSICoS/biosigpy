@@ -4,6 +4,12 @@ This file is the authoritative release history. GitHub Releases reuse the corres
 
 ## Unreleased
 
+## 1.1.0-beta - 2026-11-18
+
+- Added `ppg.pulsedetection` with continuous adaptive state, refined times in seconds, optional inactivity resets, and an example of recovery after a gain change.
+
+- Fixed `hjorth_artifacts(plotflag=True)` to display its figure. Plotting examples now display figures directly and no longer offer `--save-figure`. Fixed the squared-derivative plot in the Pan–Tompkins example.
+
 ## 1.0.0-beta - 2026-11-13
 
 - Prepared the first 1.x beta with exact Biosiglib conformance, full release-time tests, and normalized Python package versions.

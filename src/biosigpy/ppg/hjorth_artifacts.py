@@ -37,7 +37,8 @@ def hjorth_artifacts(
         Invert the threshold decision. Windows containing NaN remain marked.
     plotflag : bool, optional
         Plot the signal, detected artifacts, Hjorth parameters and thresholds
-        in four panels, as in MATLAB. Requires Matplotlib. Default is False.
+        in four panels, as in MATLAB, and show the figure. An interactive
+        backend such as QtAgg is needed for a window. Default is False.
 
     Returns
     -------
@@ -197,3 +198,4 @@ def _plot_results(signal, fs, h0, h1, h2, threshold_h0_up, threshold_h0_low,
         axes[-1].set_xlim(time[0], time[-1])
     axes[-1].set_xlabel("t [sec]")
     figure.tight_layout()
+    plt.show()
