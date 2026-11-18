@@ -39,27 +39,11 @@ python examples\ecg\sloperange_example.py
 python examples\ppg\hjorth_artifacts_example.py
 ```
 
-Examples that generate figures open an interactive Matplotlib window when an
-interactive backend is available. In non-interactive or headless environments,
-pass `--save-figure PATH` to save the plot instead:
+Examples that generate figures use an interactive Matplotlib backend such as QtAgg.
+To select it from the command line:
 
 ```bash
 MPLBACKEND=QtAgg python examples/ecg/pantompkins_example.py
-```
-
-```bash
-MPLBACKEND=Agg python examples/ecg/pantompkins_example.py --save-figure /tmp/pantompkins_example.png
-MPLBACKEND=Agg python examples/ecg/sloperange_example.py --save-figure /tmp/sloperange_example.png
-```
-
-On Windows PowerShell:
-
-```powershell
-$env:MPLBACKEND = "Agg"
-python examples\ecg\pantompkins_example.py --save-figure "$env:TEMP\pantompkins_example.png"
-python examples\ecg\sloperange_example.py --save-figure "$env:TEMP\sloperange_example.png"
-python examples\hrv\ipfm_example.py --save-figure "$env:TEMP\hrv_ipfm_example.png"
-Remove-Item Env:\MPLBACKEND
 ```
 
 For VS Code, install the example dependencies, open any example file, use
@@ -77,11 +61,5 @@ For local validation:
 ```bash
 python -m pip install -e ".[dev]"
 python examples/hrv/tdmetrics_example.py
-MPLBACKEND=Agg python examples/hrv/removefp_example.py --save-figure /tmp/hrv_removefp_example.png
-MPLBACKEND=Agg python examples/hrv/fillgaps_example.py --save-figure /tmp/hrv_fillgaps_example.png
-MPLBACKEND=Agg python examples/hrv/ipfm_example.py --save-figure /tmp/hrv_ipfm_example.png
-MPLBACKEND=Agg python examples/hrv/osp_example.py --save-figure /tmp/hrv_osp_example.png
-MPLBACKEND=Agg python examples/ecg/pantompkins_example.py --save-figure /tmp/pantompkins_example.png
-MPLBACKEND=Agg python examples/ecg/sloperange_example.py --save-figure /tmp/sloperange_example.png
 python -m pytest
 ```

@@ -1,15 +1,11 @@
 """R-wave detection from the shared Medicom MTD ECG fixture.
 
 The example opens a Matplotlib figure when an interactive backend is available.
-If no plot window appears, the active backend is likely non-interactive; run
-with ``--save-figure PATH`` to write the figure to disk instead.
 """
 
 from __future__ import annotations
 
-import argparse
 import csv
-import sys
 from pathlib import Path
 
 import matplotlib.pyplot as plt
@@ -20,10 +16,6 @@ from biosigpy.ecg import pantompkins
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[2]
 EXAMPLES_ROOT = REPOSITORY_ROOT / "examples"
-if str(EXAMPLES_ROOT) not in sys.path:
-    sys.path.insert(0, str(EXAMPLES_ROOT))
-
-from _support.figures import add_save_figure_argument, show_or_save_figure
 
 
 FIXTURE_PATH = (
@@ -35,12 +27,6 @@ FIXTURE_PATH = (
 )
 
 
-def _parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description=__doc__)
-    add_save_figure_argument(parser)
-    return parser.parse_args()
-
-
 def _load_column(path: Path, column_name: str) -> np.ndarray:
     with path.open(newline="", encoding="utf-8") as csv_file:
         reader = csv.DictReader(csv_file)
@@ -50,7 +36,6 @@ def _load_column(path: Path, column_name: str) -> np.ndarray:
 
 
 def main() -> None:
-    args = _parse_args()
 
     # Load the same ECG channel used by the Biosigmat Pan-Tompkins example.
     sampling_frequency = 256.0
@@ -73,7 +58,7 @@ def main() -> None:
     print("Detected R-wave times in seconds:")
     print(np.array2string(r_wave_times, precision=8, separator=", "))
     print("Processing outputs:")
-    for output_name in ("ecg_filtered", "decg", "decg_envelope"):
+    for output_name in ("ecg_filtered", "decg_squared", "decg_envelope"):
         output_value = outputs[output_name]
         print(f"{output_name}: shape={output_value.shape}")
 
@@ -103,7 +88,7 @@ def main() -> None:
     axes[1].set_title("Bandpass Filtered ECG Signal (5-12 Hz)")
     axes[1].grid(True)
 
-    axes[2].plot(time, outputs["decg"], color="tab:purple", linewidth=1)
+    axes[2].plot(time, outputs["decg_squared"], color="tab:purple", linewidth=1)
     axes[2].set_ylabel("Squared Derivative")
     axes[2].set_title("Squared Derivative of Filtered ECG")
     axes[2].grid(True)
@@ -124,7 +109,7 @@ def main() -> None:
     figure.suptitle("Pan-Tompkins Algorithm: Signal Processing Steps")
     figure.tight_layout()
 
-    show_or_save_figure(figure, args.save_figure)
+    plt.show()
 
 
 if __name__ == "__main__":
