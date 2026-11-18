@@ -4,6 +4,8 @@ This file is the authoritative release history. GitHub Releases reuse the corres
 
 ## Unreleased
 
+- Added ppg.pulsedetection with continuous adaptive state, refined times in seconds and optional inactivity resets.
+
 ## 1.0.0-beta - 2026-11-13
 
 - Prepared the first 1.x beta with exact Biosiglib conformance, full release-time tests, and normalized Python package versions.
