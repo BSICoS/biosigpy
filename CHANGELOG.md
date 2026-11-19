@@ -4,6 +4,10 @@ This file is the authoritative release history. GitHub Releases reuse the corres
 
 ## Unreleased
 
+- Renamed `ppg.pulsedetection` to `ppg.pulsedet`.
+
+- Added `ppg.pulsedel`, returning apex, basal, mid-amplitude and onset times. Omitting the derivative silently returns NaN onset times for every detection.
+
 ## 1.1.0-beta - 2026-11-18
 
 - Added `ppg.pulsedetection` with continuous adaptive state, refined times in seconds, optional inactivity resets, and an example of recovery after a gain change.

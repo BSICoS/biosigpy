@@ -9,7 +9,7 @@ from biosigpy.tools import localmax
 from biosigpy.tools._validation import as_positive_real_scalar, as_real_vector
 
 
-def pulsedetection(
+def pulsedet(
     dppg: ArrayLike,
     sampling_frequency: float,
     *,
