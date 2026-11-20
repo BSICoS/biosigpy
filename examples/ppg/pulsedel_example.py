@@ -43,7 +43,18 @@ def main():
 
     # Reuse the aligned derivative for pulse detection and onset delineation.
     t_d, _ = pulsedet(dppg, fs)
-    t_a, t_b, t_m, t_o = pulsedel(signal, fs, t_d, dppg=dppg)
+
+    # window_a searches forward from t_d for the apex (default 0.25 s).
+    # window_b searches backward from t_d for the basal point (default 0.15 s).
+    # points="ABMO" (default) returns apex, basal, mid-amplitude and onset times.
+    # Only onset uses dppg. If requested without it, t_o contains one NaN per pulse.
+    t_a, t_b, t_m, t_o = pulsedel(
+        signal, fs, t_d, dppg=dppg, window_a=0.25, window_b=0.15, points="ABMO"
+    )
+
+    # To request a subset, list the letters in the desired output order:
+    # t_a, t_b = pulsedel(signal, fs, t_d, points="AB")
+    # t_a = pulsedel(signal, fs, t_d, points="A")  # One letter returns one array.
 
     # Show the same fiducials on both signals.
     figure, axes = plt.subplots(2, 1, sharex=True)

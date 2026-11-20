@@ -4,6 +4,8 @@ This file is the authoritative release history. GitHub Releases reuse the corres
 
 ## Unreleased
 
+- Added `ppg.pulsenv` with precomputed fiducials and gap-limited PCHIP. Added the `points` selector to `ppg.pulsedel`.
+
 - Renamed `ppg.pulsedetection` to `ppg.pulsedet`.
 
 - Added `ppg.pulsedel`, returning apex, basal, mid-amplitude and onset times. Omitting the derivative silently returns NaN onset times for every detection.

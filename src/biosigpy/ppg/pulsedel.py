@@ -7,7 +7,8 @@ from biosigpy.tools import localmax
 from biosigpy.tools._validation import as_positive_real_scalar, as_real_vector
 
 
-def pulsedel(ppg, sampling_frequency, t_d, dppg=None, *, window_a=0.25, window_b=0.15):
+def pulsedel(ppg, sampling_frequency, t_d, dppg=None, *, window_a=0.25, window_b=0.15,
+             points="ABMO"):
     """Return apex, basal, mid-amplitude and onset times in seconds.
 
     Parameters
@@ -25,13 +26,17 @@ def pulsedel(ppg, sampling_frequency, t_d, dppg=None, *, window_a=0.25, window_b
         Apex search duration after the detection and basal search duration
         before it, in seconds.
 
+    points : str, optional
+        Distinct letters A, B, M and O, case-insensitive. Return the requested
+        points in the given order. One letter returns an array. Default "ABMO".
+
     Returns
     -------
     t_a, t_b, t_m, t_o : ndarray
-        Four one-dimensional arrays, one entry per detection. The midpoint
+        By default, four one-dimensional arrays, one entry per detection. The midpoint
         uses half the amplitude between the sampled basal point and apex.
         Omitting dppg silently returns an all-NaN t_o of the same length.
-        An empty t_d gives four empty arrays.
+        An empty t_d gives an empty array for each requested point.
     """
     ppg = as_real_vector(np.atleast_1d(ppg), name="ppg")
     fs = as_positive_real_scalar(sampling_frequency, name="sampling_frequency")
@@ -47,7 +52,14 @@ def pulsedel(ppg, sampling_frequency, t_d, dppg=None, *, window_a=0.25, window_b
         if dppg.size != ppg.size or np.isinf(dppg).any():
             raise ValueError("dppg must match the PPG length and contain no infinities")
 
-    t_a, t_b, t_m, t_o = (np.full(t_d.size, np.nan) for _ in range(4))
+    if not isinstance(points, str):
+        raise TypeError("points must be a string")
+    points = points.upper()
+    if not points or set(points) - set("ABMO") or len(set(points)) != len(points):
+        raise ValueError("points must contain distinct letters from ABMO")
+    outputs = {key: np.full(t_d.size, np.nan) for key in points}
+    need_apex = "A" in points or "M" in points or ("O" in points and dppg is not None)
+    need_basal = "B" in points or "M" in points
     forward = int(np.floor(min(window_a * fs, ppg.size) + 0.5))
     backward = int(np.floor(min(window_b * fs, ppg.size) + 0.5))
     for k in np.flatnonzero(~np.isnan(t_d)):
@@ -56,34 +68,41 @@ def pulsedel(ppg, sampling_frequency, t_d, dppg=None, *, window_a=0.25, window_b
             continue
 
         # Anchor both search windows to this detection's finite PPG span.
-        first = max(0, detection - backward)
+        basal = None
+        if need_basal:
+            first = max(0, detection - backward)
+            gaps = np.flatnonzero(np.isnan(ppg[first:detection]))
+            if gaps.size:
+                first += gaps[-1] + 1
+            _, offset = localmax(-ppg[first:detection + 1])
+            if np.isfinite(offset):
+                basal = first + int(offset)
+                if "B" in outputs:
+                    outputs["B"][k] = _refine_time(ppg, basal, fs)
+        if not need_apex:
+            continue
         last = min(ppg.size - 1, detection + forward)
-        gaps = np.flatnonzero(np.isnan(ppg[first:detection]))
-        if gaps.size:
-            first += gaps[-1] + 1
         gaps = np.flatnonzero(np.isnan(ppg[detection:last + 1]))
         if gaps.size:
             last = detection + gaps[0] - 1
-
         _, apex_offset = localmax(ppg[detection:last + 1])
-        _, basal_offset = localmax(-ppg[first:detection + 1])
-        if np.isfinite(basal_offset):
-            basal = first + int(basal_offset)
-            t_b[k] = _refine_time(ppg, basal, fs)
         if np.isnan(apex_offset):
             continue
         apex = detection + int(apex_offset)
-        t_a[k] = _refine_time(ppg, apex, fs)
+        if "A" in outputs:
+            outputs["A"][k] = _refine_time(ppg, apex, fs)
 
-        if np.isfinite(basal_offset):
+        if "M" in outputs and basal is not None:
             target = (ppg[basal] + ppg[apex]) / 2
             distance = np.abs(ppg[basal:apex + 1] - target)
             midpoint = np.argmin(distance)
-            t_m[k] = basal / fs + _refine_time(-distance, midpoint, fs)
-        if dppg is not None:
-            t_o[k] = _find_onset(ppg, dppg, apex, fs)
+            outputs["M"][k] = basal / fs + _refine_time(-distance, midpoint, fs)
+        if "O" in outputs and dppg is not None:
+            outputs["O"][k] = _find_onset(ppg, dppg, apex, fs)
 
-    return t_a, t_b, t_m, t_o
+    if len(points) == 1:
+        return outputs[points]
+    return tuple(outputs.values())
 
 
 def _refine_time(signal, sample, fs):

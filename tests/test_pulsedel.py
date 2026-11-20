@@ -37,3 +37,21 @@ def test_empty_detections():
 def test_bounds_before_rounding(time):
     with pytest.raises(ValueError, match="within the signal"):
         pulsedel([1, 2], 20, time)
+
+@pytest.mark.parametrize("points", ["A", "b", "M", "o", "BA", "OM", "OAMB"])
+def test_selected_points_match_default(points):
+    ppg = [3, 2, 1, 0, 1, 2, 3, 4, 5, 4, 3, 2]
+    dppg = [0, 0, -1, -.4, .5, 10, 9, 3, -1, -2, -1, 0]
+    default = dict(zip("ABMO", pulsedel(ppg, 20, [.25, np.nan], dppg)))
+    actual = pulsedel(ppg, 20, [.25, np.nan], dppg, points=points)
+    if len(points) == 1:
+        assert isinstance(actual, np.ndarray)
+        actual = (actual,)
+    for value, key in zip(actual, points.upper(), strict=True):
+        np.testing.assert_equal(value, default[key])
+
+
+@pytest.mark.parametrize("points", ["", "AA", "X", None])
+def test_invalid_points(points):
+    with pytest.raises((TypeError, ValueError)):
+        pulsedel([1, 2, 3], 10, [], points=points)
