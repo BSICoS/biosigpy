@@ -1,4 +1,6 @@
 title: PPG
 arrange:
   - hjorth-artifacts.md
-  - pulsedetection.md
+  - pulsedet.md
+  - pulsedel.md
+  - pulsenv.md

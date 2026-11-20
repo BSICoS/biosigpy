@@ -1,7 +1,7 @@
 """Detect PPG pulses and demonstrate optional recovery after a gain change.
 
 Run from the repository root with:
-    python examples/ppg/pulsedetection_example.py
+    python examples/ppg/pulsedet_example.py
 """
 
 from pathlib import Path
@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from scipy.signal import butter, filtfilt, lfilter
 
-from biosigpy.ppg import pulsedetection
+from biosigpy.ppg import pulsedet
 from biosigpy.tools import lpdfilter
 
 
@@ -46,7 +46,7 @@ def main():
     signal_filtered = np.r_[signal_filtered[delay:], np.zeros(delay)]
 
     # Run pulse detection on filtered signal
-    t_d, threshold = pulsedetection(signal_filtered, fs)
+    t_d, threshold = pulsedet(signal_filtered, fs)
     detection_samples = np.floor(t_d * fs + .5).astype(int)
 
     # Plot results
@@ -92,8 +92,8 @@ def main():
 
     # Control: run the same recorded signal with the optional feature disabled
     # and enabled, before introducing the simulated interruption and gain change.
-    t_d_original_without_reset, _ = pulsedetection(recovery_signal, recovery_fs)
-    t_d_original_with_reset, _ = pulsedetection(
+    t_d_original_without_reset, _ = pulsedet(recovery_signal, recovery_fs)
+    t_d_original_with_reset, _ = pulsedet(
         recovery_signal, recovery_fs, reset_after=reset_after
     )
 
@@ -110,8 +110,8 @@ def main():
     # the old threshold may remain too high. With reset_after = 5 s, the missing
     # span has already exceeded the timeout when data returns, so the detector
     # reinitializes using the available signal at its new amplitude.
-    t_d_without_reset, threshold_without_reset = pulsedetection(recovery_signal, recovery_fs)
-    t_d_with_reset, threshold_with_reset = pulsedetection(
+    t_d_without_reset, threshold_without_reset = pulsedet(recovery_signal, recovery_fs)
+    t_d_with_reset, threshold_with_reset = pulsedet(
         recovery_signal, recovery_fs, reset_after=reset_after
     )
 
