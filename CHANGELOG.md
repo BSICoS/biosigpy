@@ -4,6 +4,8 @@ This file is the authoritative release history. GitHub Releases reuse the corres
 
 ## Unreleased
 
+- Added `resp.tidalvolume` for cycle amplitude and respiratory envelopes with optional gap-limited interpolation.
+
 - Added `ppg.pulsenv` with precomputed fiducials and gap-limited PCHIP. Added the `points` selector to `ppg.pulsedel`.
 
 - Renamed `ppg.pulsedetection` to `ppg.pulsedet`.

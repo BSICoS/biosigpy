@@ -27,6 +27,12 @@ The API pages document Python signatures and link to executable examples. For ex
 | [`removefp`](hrv/removefp.md) | Remove false-positive events from an ordered series. |
 | [`tdmetrics`](hrv/tdmetrics.md) | Calculate time-domain variability metrics. |
 
+## Respiration
+
+| Function | Description |
+| --- | --- |
+| [`tidalvolume`](resp/tidalvolume.md) | Estimate respiratory amplitude per cycle and its peak and valley envelopes. |
+
 ## Tools
 
 | Function | Description |
